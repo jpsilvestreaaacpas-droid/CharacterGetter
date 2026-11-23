@@ -1,0 +1,118 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// -------------------------------------------------------------
+// Canonical Game Reference Data (Separate from Player Data)
+// -------------------------------------------------------------
+model GameCharacter {
+  id              String            @id // stable slug: "raiden-shogun", "furina"
+  name            String
+  title           String?
+  rarity          Int               // 4 or 5
+  element         String            // Pyro, Hydro, Anemo, Electro, Dendro, Cryo, Geo
+  weaponType      String            // Sword, Claymore, Polearm, Bow, Catalyst
+  region          String            // Mondstadt, Liyue, Inazuma, Sumeru, Fontaine, Natlan, Snezhnaya
+  releaseVersion  String?
+  baseHp          Int?
+  baseAtk         Int?
+  baseDef         Int?
+  iconUrl         String?
+  splashUrl       String?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  playerCharacters PlayerCharacter[]
+
+  @@index([element])
+  @@index([rarity])
+}
+
+// -------------------------------------------------------------
+// Personal Player Profile Data
+// -------------------------------------------------------------
+model PlayerProfile {
+  id               String            @id @default(uuid())
+  travelerName     String            @default("Traveler")
+  adventureRank    Int               @default(1)
+  worldLevel       Int               @default(1)
+  signature        String?
+  primogems        Int               @default(0)
+  intertwinedFates Int               @default(0)
+  acquaintFates    Int               @default(0)
+  isDemo           Boolean           @default(false)
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  characters       PlayerCharacter[]
+  resources        PlayerResource[]
+  pityTrackers     PityTracker[]
+}
+
+// -------------------------------------------------------------
+// Player Owned Characters
+// -------------------------------------------------------------
+model PlayerCharacter {
+  id              String         @id @default(uuid())
+  profileId       String
+  characterId     String
+  level           Int            @default(1)
+  ascension       Int            @default(0)
+  constellation   Int            @default(0)
+  friendshipLevel Int            @default(1)
+  talentNormal    Int            @default(1)
+  talentSkill     Int            @default(1)
+  talentBurst     Int            @default(1)
+  isTarget        Boolean        @default(false)
+  acquiredAt      DateTime?
+  updatedAt       DateTime       @updatedAt
+
+  profile         PlayerProfile  @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  character       GameCharacter  @relation(fields: [characterId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, characterId])
+  @@index([profileId])
+  @@index([characterId])
+}
+
+// -------------------------------------------------------------
+// Player Resources
+// -------------------------------------------------------------
+model PlayerResource {
+  id             String        @id @default(uuid())
+  profileId      String
+  resourceType   String        // Mora, Hero's Wit, Ascension Gem, Boss Material, Talent Book
+  itemId         String
+  name           String
+  quantity       Int           @default(0)
+  targetQuantity Int           @default(0)
+  updatedAt      DateTime      @updatedAt
+
+  profile        PlayerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@index([profileId])
+}
+
+// -------------------------------------------------------------
+// Pity & Banner Tracking
+// -------------------------------------------------------------
+model PityTracker {
+  id                String        @id @default(uuid())
+  profileId         String
+  bannerType        String        // CHARACTER_EVENT, WEAPON_EVENT, STANDARD, CHRONICLED
+  currentPity       Int           @default(0)
+  maxPity           Int           @default(90) // 90 for character, 80 for weapon
+  isGuaranteed      Boolean       @default(false) // 50/50 won or guaranteed next
+  targetCharacterId String?
+  updatedAt         DateTime      @updatedAt
+
+  profile           PlayerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+
+  @@unique([profileId, bannerType])
+  @@index([profileId])
+}
