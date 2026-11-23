@@ -18,6 +18,7 @@ describe("Application Shell & Navigation", () => {
     expect(screen.getByText("Resources")).toBeInTheDocument();
     expect(screen.getByText("Progression")).toBeInTheDocument();
     expect(screen.getByText("Teams")).toBeInTheDocument();
+    expect(screen.getByText("Banner Radar")).toBeInTheDocument();
     expect(screen.getByText("Settings")).toBeInTheDocument();
   });
 

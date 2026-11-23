@@ -7,9 +7,25 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CommunityDatasetImportSchema } from "@/lib/data/schemas";
-import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw } from "lucide-react";
+import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw, User, Save } from "lucide-react";
+import { Input } from "@/components/ui/input";
 
 export default function SettingsPage() {
+  const [profile, setProfile] = React.useState({
+    travelerName: "Lumine",
+    adventureRank: 58,
+    worldLevel: 8,
+    primogems: 14880,
+    intertwinedFates: 12,
+    signature: "Collecting stars across Teyvat ✨",
+  });
+  const [saved, setSaved] = React.useState(false);
+
+  function handleSave() {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  }
+
   const [importStatus, setImportStatus] = React.useState<{
     state: "idle" | "success" | "error";
     message?: string;
@@ -81,6 +97,85 @@ export default function SettingsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Preferences */}
         <div className="space-y-6">
+          {/* Player Profile Editor */}
+          <Card fantasy>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <User className="w-4 h-4 text-gold-500" />
+                Player Profile
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Edit your traveler name and account details
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-muted-foreground uppercase">Traveler Name</label>
+                <Input
+                  value={profile.travelerName}
+                  onChange={(e) => setProfile((p) => ({ ...p, travelerName: e.target.value }))}
+                  className="h-8 text-sm"
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground uppercase">Adventure Rank</label>
+                  <Input
+                    type="number" min={1} max={60}
+                    value={profile.adventureRank}
+                    onChange={(e) => setProfile((p) => ({ ...p, adventureRank: parseInt(e.target.value) || 1 }))}
+                    className="h-8 text-sm"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground uppercase">World Level</label>
+                  <Input
+                    type="number" min={0} max={8}
+                    value={profile.worldLevel}
+                    onChange={(e) => setProfile((p) => ({ ...p, worldLevel: parseInt(e.target.value) || 0 }))}
+                    className="h-8 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground uppercase">Primogems</label>
+                  <Input
+                    type="number" min={0}
+                    value={profile.primogems}
+                    onChange={(e) => setProfile((p) => ({ ...p, primogems: parseInt(e.target.value) || 0 }))}
+                    className="h-8 text-sm font-mono"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-xs font-medium text-muted-foreground uppercase">Intertwined Fates</label>
+                  <Input
+                    type="number" min={0}
+                    value={profile.intertwinedFates}
+                    onChange={(e) => setProfile((p) => ({ ...p, intertwinedFates: parseInt(e.target.value) || 0 }))}
+                    className="h-8 text-sm font-mono"
+                  />
+                </div>
+              </div>
+              <div className="space-y-1">
+                <label className="text-xs font-medium text-muted-foreground uppercase">Signature</label>
+                <Input
+                  value={profile.signature}
+                  onChange={(e) => setProfile((p) => ({ ...p, signature: e.target.value }))}
+                  className="h-8 text-sm"
+                />
+              </div>
+              <Button
+                variant="fantasy" size="sm"
+                className="w-full text-xs gap-1.5"
+                onClick={handleSave}
+              >
+                {saved ? <CheckCircle2 className="w-3.5 h-3.5" /> : <Save className="w-3.5 h-3.5" />}
+                {saved ? "Saved!" : "Save Profile"}
+              </Button>
+            </CardContent>
+          </Card>
+
           {/* Theme Settings */}
           <Card fantasy>
             <CardHeader className="pb-3">

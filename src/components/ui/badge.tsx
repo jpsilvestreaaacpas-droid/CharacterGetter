@@ -19,6 +19,10 @@ const badgeVariants = cva(
           "border-amber-500/40 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-700 dark:text-amber-300 font-semibold shadow-sm",
         "rarity-4":
           "border-purple-500/40 bg-purple-500/15 text-purple-700 dark:text-purple-300 font-semibold shadow-sm",
+        "five-star":
+          "border-amber-500/40 bg-gradient-to-r from-amber-500/20 to-yellow-500/20 text-amber-700 dark:text-amber-300 font-semibold shadow-sm",
+        "four-star":
+          "border-purple-500/40 bg-purple-500/15 text-purple-700 dark:text-purple-300 font-semibold shadow-sm",
         pyro: "border-red-500/40 bg-red-500/10 text-red-600 dark:text-red-400 font-medium",
         hydro: "border-blue-500/40 bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium",
         anemo: "border-teal-500/40 bg-teal-500/10 text-teal-600 dark:text-teal-400 font-medium",

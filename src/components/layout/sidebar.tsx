@@ -8,6 +8,7 @@ import {
   LayoutDashboard,
   Users,
   Sparkles,
+  Radar,
   Package,
   TrendingUp,
   Shield,
@@ -36,6 +37,12 @@ export const NAV_ITEMS = [
     href: "/pull-planner",
     icon: Sparkles,
     badge: "Pity",
+  },
+  {
+    title: "Banner Radar",
+    href: "/banner-radar",
+    icon: Radar,
+    badge: "New",
   },
   {
     title: "Resources",
@@ -106,7 +113,7 @@ export function Sidebar({ className }: { className?: string }) {
             <h1 className="font-bold text-base tracking-tight text-foreground flex items-center gap-1.5">
               Character Getter
               <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-gold-500/15 text-gold-600 dark:text-gold-400 border border-gold-500/30">
-                M1
+                M2
               </span>
             </h1>
             <p className="text-xs text-muted-foreground font-serif italic">Teyvat Companion</p>
@@ -154,8 +161,8 @@ export function Sidebar({ className }: { className?: string }) {
         {/* Footer info */}
         <div className="p-4 border-t border-border/70 text-xs text-muted-foreground space-y-1">
           <div className="flex items-center justify-between">
-            <span className="font-mono text-[11px]">Milestone 1</span>
-            <span className="text-gold-600 dark:text-gold-400 font-medium">Foundation</span>
+            <span className="font-mono text-[11px]">Milestone 2</span>
+            <span className="text-gold-600 dark:text-gold-400 font-medium">Resources & Teams</span>
           </div>
           <p className="text-[10px] text-muted-foreground/80">Independent Genshin Companion</p>
         </div>
