@@ -84,9 +84,11 @@ export default function CharactersPage() {
     window.addEventListener("keydown", onKey);
     const prevOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+    document.body.dataset.modalOpen = "true"; // new
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
+      delete document.body.dataset.modalOpen; // new
     };
   }, [activeModalChar]);
 
@@ -137,27 +139,27 @@ export default function CharactersPage() {
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 p-4 rounded-xl bg-card border border-border/70 shadow-sm">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-card border border-border/70 shadow-sm min-w-0">
         {/* Search */}
-        <div className="relative flex-1 max-w-sm">
+        <div className="relative flex-1 w-full md:max-w-sm">
           <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="Search characters by name..."
-            className="pl-9 text-xs"
+            className="pl-9 text-xs w-full"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
         </div>
 
         {/* Filter Badges */}
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {/* Rarity Toggles */}
           <div className="flex items-center rounded-lg border border-border/80 p-0.5 bg-muted/30">
             {RARITIES.map((r) => (
               <button
                 key={r}
                 onClick={() => setSelectedRarity(r)}
-                className={`px-2.5 py-1 text-xs font-medium rounded-md transition-colors ${selectedRarity === r
+                className={`px-2 sm:px-2.5 py-1 text-[11px] sm:text-xs font-medium rounded-md transition-colors ${selectedRarity === r
                     ? "bg-gold-500/20 text-gold-600 dark:text-gold-400 font-semibold"
                     : "text-muted-foreground hover:text-foreground"
                   }`}
@@ -173,7 +175,7 @@ export default function CharactersPage() {
               <button
                 key={elem}
                 onClick={() => setSelectedElement(elem)}
-                className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors border flex items-center gap-1.5 ${selectedElement === elem
+                className={`px-2 sm:px-2.5 py-1 text-[11px] sm:text-xs rounded-md font-medium transition-colors border flex items-center gap-1 sm:gap-1.5 ${selectedElement === elem
                     ? "bg-primary text-primary-foreground border-transparent font-semibold shadow-sm"
                     : "bg-card border-border/70 text-muted-foreground hover:bg-muted"
                   }`}
@@ -187,7 +189,7 @@ export default function CharactersPage() {
       </div>
 
       {/* Character Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3.5">
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5 sm:gap-3.5">
         {filteredCharacters.map((char) => (
           <CharacterCard
             key={char.characterId}
@@ -226,10 +228,10 @@ export default function CharactersPage() {
         </div>
       )}
 
-      {/* Character Detail Modal: wide two-pane layout */}
+      {/* Character Detail Modal: responsive layout */}
       {activeModalChar && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={(e) => {
             if (e.target === e.currentTarget) setActiveModalChar(null);
           }}
@@ -238,10 +240,10 @@ export default function CharactersPage() {
             role="dialog"
             aria-modal="true"
             aria-label={`${activeModalChar.name} details`}
-            className="w-full max-w-7xl h-[94vh] flex flex-col rounded-2xl border border-gold-500/40 bg-card shadow-2xl overflow-hidden"
+            className="w-full max-w-7xl max-h-[96vh] sm:h-[94vh] flex flex-col rounded-xl sm:rounded-2xl border border-gold-500/40 bg-card shadow-2xl overflow-hidden"
           >
             {/* Modal Header */}
-            <div className="flex flex-wrap items-center justify-between gap-3 px-5 py-3.5 border-b border-border/60 bg-muted/20">
+            <div className="flex flex-wrap items-center justify-between gap-2.5 px-3 sm:px-5 py-3 border-b border-border/60 bg-muted/20">
               <div className="flex items-center gap-3 min-w-0">
                 <div className="min-w-0">
                   <h3 className="text-xl font-bold text-foreground leading-tight truncate">

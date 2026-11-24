@@ -63,6 +63,7 @@ export default function PullPlannerPage() {
   // Calculations
   const availableWishes = totalAvailableWishes(primogems, fates);
   const wishesFromPrimos = primogemsToWishes(primogems);
+  const leftoverPrimos = primogems % PRIMOGEMS_PER_WISH;
   const targetCalculations = wishesToTarget(pity, isGuaranteed, 90);
   const progressPct = pityPercentage(pity, 90);
 
@@ -104,11 +105,11 @@ export default function PullPlannerPage() {
         </div>
 
         {/* Tab switch buttons */}
-        <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-lg border border-border/60">
+        <div className="flex items-center gap-1 p-1 bg-muted/40 rounded-lg border border-border/60 overflow-x-auto max-w-full">
           <Button
             variant={activeTab === "calculator" ? "fantasy" : "ghost"}
             size="sm"
-            className="text-xs"
+            className="text-[11px] sm:text-xs px-2.5 sm:px-3"
             onClick={() => setActiveTab("calculator")}
           >
             <Calculator className="w-3.5 h-3.5 mr-1" />
@@ -117,7 +118,7 @@ export default function PullPlannerPage() {
           <Button
             variant={activeTab === "projections" ? "fantasy" : "ghost"}
             size="sm"
-            className="text-xs"
+            className="text-[11px] sm:text-xs px-2.5 sm:px-3"
             onClick={() => setActiveTab("projections")}
           >
             <TrendingUp className="w-3.5 h-3.5 mr-1" />
@@ -126,7 +127,7 @@ export default function PullPlannerPage() {
           <Button
             variant={activeTab === "history" ? "fantasy" : "ghost"}
             size="sm"
-            className="text-xs"
+            className="text-[11px] sm:text-xs px-2.5 sm:px-3"
             onClick={() => setActiveTab("history")}
           >
             <History className="w-3.5 h-3.5 mr-1" />
@@ -261,19 +262,19 @@ export default function PullPlannerPage() {
 
               <CardContent className="p-6 space-y-6">
                 {/* Total Pulls Available Banner */}
-                <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-gold-500/15 via-card to-card border border-gold-500/30">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 sm:p-4 rounded-xl bg-gradient-to-r from-gold-500/15 via-card to-card border border-gold-500/30 min-w-0">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                    <p className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       Total Pulling Power
                     </p>
-                    <p className="text-3xl font-extrabold text-foreground mt-0.5">
+                    <p className="text-2xl sm:text-3xl font-extrabold text-foreground mt-0.5">
                       {availableWishes}{" "}
-                      <span className="text-sm font-normal text-muted-foreground">Available Wishes</span>
+                      <span className="text-xs sm:text-sm font-normal text-muted-foreground">Available Wishes</span>
                     </p>
                   </div>
-                  <div className="text-right text-xs text-muted-foreground font-mono">
-                    <p>{primogems.toLocaleString()} Primos</p>
-                    <p>+ {fates} Fates</p>
+                  <div className="text-left sm:text-right text-xs text-muted-foreground font-mono">
+                    <p>{primogems.toLocaleString()} Primos ({wishesFromPrimos} Wishes + {leftoverPrimos} Leftover)</p>
+                    <p>+ {fates} Intertwined Fates</p>
                   </div>
                 </div>
 

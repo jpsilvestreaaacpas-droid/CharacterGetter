@@ -58,13 +58,17 @@ export function Sidebar({ className }: { className?: string }) {
         />
       )}
 
-      <aside
-        className={cn(
-          "fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-[#0a1222]/92 backdrop-blur-2xl border-r border-amber-500/20 transition-transform duration-300 lg:translate-x-0 shadow-2xl",
-          mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
-          className
-        )}
-      >
+        <aside
+          className={cn(
+            "fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-[#0a1222]/92 backdrop-blur-2xl border-r border-amber-500/20 shadow-2xl transition-transform duration-300",
+            mobileOpen ? "translate-x-0" : "-translate-x-full",
+            "lg:translate-x-0",
+            // slide out whenever any modal has set the flag
+            "[body[data-modal-open]_&]:-translate-x-full",
+            className
+          )}
+        >
+          
         {/* Brand Header */}
         <div className="p-5 border-b border-amber-500/15 flex items-center justify-between">
           <div className="flex items-center gap-3">

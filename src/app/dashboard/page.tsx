@@ -77,81 +77,81 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Row 1: 4 Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-        {/* Card 1: Available Wishes */}
-        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">Available Wishes</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black font-mono text-foreground leading-none">{totalWishes}</span>
-              <span className="text-[11px] text-muted-foreground font-medium">({wishesFromPrimos} from Primos + {profile.intertwinedFates} Fates)</span>
+        {/* Row 1: 4 Stat Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5">
+          {/* Card 1: Available Wishes */}
+          <div className="genshin-card filigree-corners p-3.5 sm:p-4 flex items-start justify-between min-w-0">
+            <div className="space-y-1 min-w-0 flex-1 mr-2">
+              <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 truncate">Available Wishes</p>
+              <div className="flex items-baseline gap-1.5 flex-wrap">
+                <span className="text-xl sm:text-2xl font-black font-mono text-foreground leading-none">{totalWishes}</span>
+                <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">({wishesFromPrimos} Primos + {profile.intertwinedFates} Fates)</span>
+              </div>
+              <p className="text-[11px] text-emerald-400 font-medium pt-0.5">Ready to pull</p>
             </div>
-            <p className="text-[11px] text-emerald-400 font-medium pt-1">Ready to pull</p>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+              <Sparkles className="w-4 h-4 fill-current" />
+            </div>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
-            <Sparkles className="w-4 h-4 fill-current" />
-          </div>
-        </div>
 
-        {/* Card 2: Primogem Balance */}
-        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">Primogem Balance</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black font-mono text-foreground leading-none">{profile.primogems.toLocaleString()}</span>
-              <span className="text-[11px] text-muted-foreground font-medium">(+{wishesFromPrimos} Wishes)</span>
+          {/* Card 2: Primogem Balance */}
+          <div className="genshin-card filigree-corners p-3.5 sm:p-4 flex items-start justify-between min-w-0">
+            <div className="space-y-1 min-w-0 flex-1 mr-2">
+              <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 truncate">Primogem Balance</p>
+              <div className="flex items-baseline gap-1.5 flex-wrap">
+                <span className="text-xl sm:text-2xl font-black font-mono text-foreground leading-none">{profile.primogems.toLocaleString()}</span>
+                <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">(+{wishesFromPrimos} Wishes)</span>
+              </div>
+              <p className="text-[11px] text-amber-400 font-medium pt-0.5">+60 Daily Commissions</p>
             </div>
-            <p className="text-[11px] text-amber-400 font-medium pt-1">+60 Daily Commissions</p>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+              <Star className="w-4 h-4 fill-current" />
+            </div>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
-            <Star className="w-4 h-4 fill-current" />
-          </div>
-        </div>
 
-        {/* Card 3: Character Pity */}
-        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">Character Pity</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black font-mono text-amber-300 leading-none">{currentPity}/90</span>
-              <span className="text-[11px] text-muted-foreground font-medium">({isGuaranteed ? "Guaranteed" : "50/50 Active"})</span>
+          {/* Card 3: Character Pity */}
+          <div className="genshin-card filigree-corners p-3.5 sm:p-4 flex items-start justify-between min-w-0">
+            <div className="space-y-1 min-w-0 flex-1 mr-2">
+              <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 truncate">Character Pity</p>
+              <div className="flex items-baseline gap-1.5 flex-wrap">
+                <span className="text-xl sm:text-2xl font-black font-mono text-amber-300 leading-none">{currentPity}/90</span>
+                <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">({isGuaranteed ? "Guaranteed" : "50/50 Active"})</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-0.5">{Math.max(0, 74 - currentPity)} pulls to soft</p>
             </div>
-            <p className="text-[11px] text-muted-foreground pt-1">{Math.max(0, 74 - currentPity)} pulls to soft</p>
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+              <Target className="w-4 h-4" />
+            </div>
           </div>
-          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
-            <Target className="w-4 h-4" />
-          </div>
-        </div>
 
-        {/* Card 4: Owned Characters */}
-        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
-          <div className="space-y-1">
-            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">Owned Characters</p>
-            <div className="flex items-baseline gap-1.5">
-              <span className="text-2xl font-black font-mono text-foreground leading-none">{rosterStats.totalOwned}</span>
-              <span className="text-[11px] text-muted-foreground font-medium">({rosterStats.fiveStars} Five-Stars • {rosterStats.fourStars} Four-Stars)</span>
+          {/* Card 4: Owned Characters */}
+          <div className="genshin-card filigree-corners p-3.5 sm:p-4 flex items-start justify-between min-w-0">
+            <div className="space-y-1 min-w-0 flex-1 mr-2">
+              <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 truncate">Owned Characters</p>
+              <div className="flex items-baseline gap-1.5 flex-wrap">
+                <span className="text-xl sm:text-2xl font-black font-mono text-foreground leading-none">{rosterStats.totalOwned}</span>
+                <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">({rosterStats.fiveStars} 5★ • {rosterStats.fourStars} 4★)</span>
+              </div>
+              <p className="text-[11px] text-muted-foreground pt-0.5">{rosterStats.maxLevelCount} at Max Lv. 90</p>
             </div>
-            <p className="text-[11px] text-muted-foreground pt-1">{rosterStats.maxLevelCount} at Max Lv. 90</p>
-          </div>
-          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
-            <Users className="w-4 h-4" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+              <Users className="w-4 h-4" />
+            </div>
           </div>
         </div>
-      </div>
 
       {/* Row 2: Target Character + Roster Progression */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-5">
         {/* Left: Active Target Character */}
-        <div className="lg:col-span-7 xl:col-span-8 genshin-card filigree-corners p-5 space-y-4 relative overflow-hidden">
-          <div className="flex items-center justify-between">
+        <div className="lg:col-span-7 xl:col-span-8 genshin-card filigree-corners p-4 sm:p-5 space-y-4 relative overflow-hidden min-w-0">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center">
+              <div className="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center shrink-0">
                 <Flame className="w-3.5 h-3.5 fill-current" />
               </div>
               <div>
                 <h3 className="font-bold text-sm text-foreground">Active Target Character</h3>
-                <p className="text-[11px] text-muted-foreground">Target priority for wishing and pull allocation analysis</p>
+                <p className="text-[11px] text-muted-foreground hidden sm:block">Target priority for wishing and pull allocation analysis</p>
               </div>
             </div>
             <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/35">
@@ -160,42 +160,42 @@ export default function DashboardPage() {
           </div>
 
           {/* Character Banner */}
-          <div className="p-4 rounded-xl bg-[#111a2f]/90 border border-amber-500/25 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="flex items-center gap-4 relative z-10">
-              <div className="w-13 h-13 rounded-xl bg-gradient-to-br from-amber-500/25 via-red-500/20 to-purple-500/20 border border-amber-400/40 p-2.5 flex items-center justify-center text-amber-300 font-black text-sm shadow-inner">
+          <div className="p-3.5 sm:p-4 rounded-xl bg-[#111a2f]/90 border border-amber-500/25 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 min-w-0">
+            <div className="flex items-center gap-3 sm:gap-4 relative z-10 min-w-0">
+              <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-xl bg-gradient-to-br from-amber-500/25 via-red-500/20 to-purple-500/20 border border-amber-400/40 p-2 sm:p-2.5 flex items-center justify-center text-amber-300 font-black text-xs sm:text-sm shadow-inner shrink-0">
                 5★
               </div>
-              <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className="text-base font-bold text-foreground">{nextTarget?.name ?? "Hu Tao"}</h4>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
+                  <h4 className="text-sm sm:text-base font-bold text-foreground truncate">{nextTarget?.name ?? "Hu Tao"}</h4>
                   <Badge variant="pyro" className="text-[10px] px-2 py-0">Pyro</Badge>
                   <span className="text-xs text-muted-foreground font-mono">Polearm</span>
                 </div>
-                <p className="text-xs text-muted-foreground italic mt-0.5">
+                <p className="text-xs text-muted-foreground italic mt-0.5 truncate">
                   {nextTarget?.title ?? "Fragrance in Thaw"} — {nextTarget?.region ?? "Liyue"}
                 </p>
               </div>
             </div>
 
-            <div className="text-left sm:text-right relative z-10">
+            <div className="text-left sm:text-right relative z-10 shrink-0">
               <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Status</p>
               <p className="text-xs font-bold text-amber-400">{isGuaranteed ? "Guaranteed Rate-Up" : "On 50/50"}</p>
             </div>
 
-            {/* Chat emoji companion decoration – replaces old Boo Tao ghost SVGs */}
-            <div className="absolute right-20 -top-2 pointer-events-none opacity-85">
+            {/* Chat emoji companion decoration */}
+            <div className="hidden sm:block absolute right-24 -top-2 pointer-events-none opacity-85">
               <ChatEmojiImg slot="dashboard_target" size={36} animate={false} />
             </div>
-            <div className="absolute right-6 top-5 pointer-events-none opacity-60">
+            <div className="hidden sm:block absolute right-6 top-5 pointer-events-none opacity-60">
               <ChatEmojiImg slot="dashboard_target_ghost" size={28} animate={false} />
             </div>
           </div>
 
           {/* Pity Progress Gauge */}
-          <div className="space-y-2 pt-1">
-            <div className="flex items-center justify-between text-xs">
-              <span className="text-muted-foreground font-medium">Pity Progress to Next 5-Star:</span>
-              <span className="font-mono text-amber-300 font-bold">{currentPity} / 90 Pulls ({pityPct}%)</span>
+          <div className="space-y-2 pt-1 min-w-0">
+            <div className="flex items-center justify-between text-xs gap-2">
+              <span className="text-muted-foreground font-medium truncate">Pity Progress to Next 5-Star:</span>
+              <span className="font-mono text-amber-300 font-bold shrink-0">{currentPity} / 90 Pulls ({pityPct}%)</span>
             </div>
             <div className="h-2.5 w-full rounded-full bg-[#0a1222] overflow-hidden border border-amber-500/20 p-0.5">
               <div className="h-full rounded-full pity-glow-bar transition-all duration-500" style={{ width: `${pityPct}%` }} />
@@ -208,15 +208,15 @@ export default function DashboardPage() {
           </div>
 
           {/* Budget Boxes */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs">
-            <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1 text-xs">
+            <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5 min-w-0">
               <p className="text-[10px] uppercase font-semibold text-muted-foreground">Wishes to 5-Star:</p>
               <p className="font-bold text-sm text-foreground font-mono">
                 {targetWishes.wishesToNext5Star} Pulls{" "}
                 <span className="text-xs text-muted-foreground font-normal">({targetWishes.wishesToNext5Star * 160} Primos)</span>
               </p>
             </div>
-            <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5">
+            <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5 min-w-0">
               <p className="text-[10px] uppercase font-semibold text-muted-foreground">Guaranteed Target Budget:</p>
               <p className="font-bold text-sm text-foreground font-mono">
                 {targetWishes.wishesToGuaranteedTarget} Pulls{" "}
@@ -227,7 +227,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Right: Roster Progression */}
-        <div className="lg:col-span-5 xl:col-span-4 genshin-card filigree-corners p-5 space-y-4 flex flex-col justify-between">
+        <div className="lg:col-span-5 xl:col-span-4 genshin-card filigree-corners p-4 sm:p-5 space-y-4 flex flex-col justify-between min-w-0">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center">
