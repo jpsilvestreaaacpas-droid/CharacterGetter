@@ -19,7 +19,8 @@ import {
   Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { HuTaoChibi, FurinaChibi, ZhongliChibi } from "@/components/ui/genshin-chibi";
+import { HuTaoChibi } from "@/components/ui/genshin-chibi";
+import { CharacterSprite } from "@/components/ui/character-sprite";
 
 export const NAV_ITEMS = [
   {
@@ -58,7 +59,7 @@ export const NAV_ITEMS = [
     href: "/progression",
     icon: TrendingUp,
     badge: null,
-    hasChibi: "furina",
+    hasSprite: "furina",
   },
   {
     title: "Teams",
@@ -83,10 +84,10 @@ export function Sidebar({ className }: { className?: string }) {
       {/* Mobile Menu Button */}
       <div className="lg:hidden fixed top-3 left-4 z-50">
         <Button
-          variant="outline-gold"
+          variant="outline"
           size="icon"
           onClick={() => setMobileOpen(!mobileOpen)}
-          className="bg-card/90 backdrop-blur shadow-md"
+          className="bg-[#0b1426]/90 border-amber-500/30 text-amber-300 backdrop-blur shadow-md"
         >
           {mobileOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </Button>
@@ -103,7 +104,7 @@ export function Sidebar({ className }: { className?: string }) {
       {/* Sidebar container matching screenshot */}
       <aside
         className={cn(
-          "fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-[#0a1222]/90 backdrop-blur-xl border-r border-amber-500/20 transition-transform duration-300 lg:translate-x-0 shadow-2xl",
+          "fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-[#0a1222]/92 backdrop-blur-2xl border-r border-amber-500/20 transition-transform duration-300 lg:translate-x-0 shadow-2xl",
           mobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0",
           className
         )}
@@ -157,17 +158,17 @@ export function Sidebar({ className }: { className?: string }) {
                   )}
                 </Link>
 
-                {/* Cute Chibi Hu Tao sitting on the active Dashboard item */}
+                {/* Chibi mascot on Dashboard */}
                 {item.hasChibi === "hutao" && (
                   <div className="absolute -top-3.5 -right-1 z-20 pointer-events-none animate-genshin-float">
                     <HuTaoChibi className="w-11 h-11 drop-shadow-md" />
                   </div>
                 )}
 
-                {/* Cute Chibi Furina sitting beside Progression */}
-                {item.hasChibi === "furina" && (
-                  <div className="absolute -top-3.5 -right-1 z-20 pointer-events-none animate-genshin-float">
-                    <FurinaChibi className="w-11 h-11 drop-shadow-md" />
+                {/* Character sprite on Progression / Resources */}
+                {item.hasSprite === "furina" && (
+                  <div className="absolute -top-3.5 -right-0.5 z-20 pointer-events-none animate-genshin-float">
+                    <CharacterSprite characterId="furina" size="sm" className="w-10 h-10" />
                   </div>
                 )}
               </div>
@@ -175,8 +176,8 @@ export function Sidebar({ className }: { className?: string }) {
           })}
         </div>
 
-        {/* Footer info with Chibi Zhongli */}
-        <div className="p-4 border-t border-amber-500/15 bg-black/20 text-xs text-muted-foreground relative">
+        {/* Footer info with Zhongli sprite */}
+        <div className="p-4 border-t border-amber-500/15 bg-black/25 text-xs text-muted-foreground relative">
           <div className="flex items-end justify-between">
             <div className="space-y-0.5">
               <div className="flex items-center gap-1.5">
@@ -188,9 +189,9 @@ export function Sidebar({ className }: { className?: string }) {
               <p className="text-[10px] text-muted-foreground/70">Independent Teyvat Companion</p>
             </div>
 
-            {/* Cute Chibi Zhongli resting in the corner */}
+            {/* Character Sprite: Zhongli */}
             <div className="pointer-events-none transform -translate-y-1">
-              <ZhongliChibi className="w-11 h-11 drop-shadow-md" />
+              <CharacterSprite characterId="zhongli" size="sm" className="w-11 h-11" />
             </div>
           </div>
         </div>

@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CommunityDatasetImportSchema } from "@/lib/data/schemas";
-import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw, User, Save } from "lucide-react";
+import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw, User, Save, Image as ImageIcon } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useRegionalBackground, REGIONAL_BACKGROUNDS, RegionalBackgroundId } from "@/components/theme/background-context";
 
 export default function SettingsPage() {
+  const { currentBackground, setBackground } = useRegionalBackground();
   const [profile, setProfile] = React.useState({
     travelerName: "Lumine",
     adventureRank: 58,
@@ -187,6 +189,55 @@ export default function SettingsPage() {
             <CardContent className="flex items-center justify-between">
               <span className="text-xs font-medium text-foreground">Theme Mode</span>
               <ThemeToggle />
+            </CardContent>
+          </Card>
+
+          {/* Regional Background Selector */}
+          <Card fantasy>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-base flex items-center gap-2">
+                <ImageIcon className="w-4 h-4 text-gold-500" />
+                Regional Environment Artwork
+              </CardTitle>
+              <CardDescription className="text-xs">
+                Select your immersive Teyvat regional background landscape
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <div className="grid grid-cols-1 gap-2.5">
+                {REGIONAL_BACKGROUNDS.map((bg) => (
+                  <button
+                    key={bg.id}
+                    onClick={() => setBackground(bg.id as RegionalBackgroundId)}
+                    className={`p-2.5 rounded-xl border text-left transition-all relative overflow-hidden flex items-center justify-between group ${
+                      currentBackground === bg.id
+                        ? "border-amber-500/50 bg-amber-500/15 shadow-[0_0_15px_rgba(245,158,11,0.15)]"
+                        : "border-border/70 bg-card/60 hover:border-border"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div
+                        className="w-12 h-12 rounded-lg bg-cover bg-center border border-white/20 shadow-inner shrink-0"
+                        style={{ backgroundImage: `url('${bg.image}')` }}
+                      />
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <p className="font-bold text-xs text-foreground">{bg.name}</p>
+                          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                            {bg.region}
+                          </Badge>
+                        </div>
+                        <p className="text-[11px] text-muted-foreground mt-0.5 line-clamp-1">
+                          {bg.description}
+                        </p>
+                      </div>
+                    </div>
+                    {currentBackground === bg.id && (
+                      <CheckCircle2 className="w-4 h-4 text-amber-400 shrink-0 ml-2" />
+                    )}
+                  </button>
+                ))}
+              </div>
             </CardContent>
           </Card>
 
