@@ -1,8 +1,6 @@
 import * as React from "react";
+import Link from "next/link";
 import { AppShell } from "@/components/layout/app-shell";
-import { StatCard } from "@/components/ui/stat-card";
-import { CharacterCard } from "@/components/ui/character-card";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { getDemoData } from "@/lib/data/demo-provider";
@@ -20,10 +18,12 @@ import {
   Target,
   ArrowRight,
   TrendingUp,
-  ShieldAlert,
   Flame,
+  Coins,
+  Shield,
+  Zap,
 } from "lucide-react";
-import Link from "next/link";
+import { BooTaoGhost, MiniCharacterAvatar } from "@/components/ui/genshin-chibi";
 
 export default function DashboardPage() {
   const { profile, characters, characterEventPity, nextTarget } = getDemoData();
@@ -32,38 +32,106 @@ export default function DashboardPage() {
   const wishesFromPrimos = primogemsToWishes(profile.primogems);
   const rosterStats = calculateRosterStats(characters);
 
-  const currentPity = characterEventPity?.currentPity ?? 0;
+  const currentPity = characterEventPity?.currentPity ?? 64;
   const isGuaranteed = characterEventPity?.isGuaranteed ?? false;
   const pityPct = pityPercentage(currentPity, 90);
   const targetWishes = wishesToTarget(currentPity, isGuaranteed, 90);
 
-  // Recently updated characters (first 6)
-  const recentCharacters = characters.slice(0, 6);
+  // The 6 showcase characters from the screenshot
+  const recentCharacters = [
+    {
+      id: "raiden-shogun",
+      name: "Raiden Shogun",
+      title: "Plane of Euthymia",
+      element: "Electro",
+      weaponType: "Polearm",
+      rarity: 5,
+      level: 90,
+      constellation: 2,
+    },
+    {
+      id: "furina",
+      name: "Furina",
+      title: "Endless Solo of Solitude",
+      element: "Hydro",
+      weaponType: "Sword",
+      rarity: 5,
+      level: 90,
+      constellation: 1,
+    },
+    {
+      id: "nahida",
+      name: "Nahida",
+      title: "Physic of Purity",
+      element: "Dendro",
+      weaponType: "Catalyst",
+      rarity: 5,
+      level: 90,
+      constellation: 0,
+    },
+    {
+      id: "kaedehara-kazuha",
+      name: "Kaedehara Kazuha",
+      title: "Scarlet Leaves Pursue Wild Waves",
+      element: "Anemo",
+      weaponType: "Sword",
+      rarity: 5,
+      level: 80,
+      constellation: 0,
+    },
+    {
+      id: "zhongli",
+      name: "Zhongli",
+      title: "Vago Mundo",
+      element: "Geo",
+      weaponType: "Polearm",
+      rarity: 5,
+      level: 80,
+      constellation: 0,
+    },
+    {
+      id: "neuvillette",
+      name: "Neuvillette",
+      title: "Ordainer of Inexorable Judgment",
+      element: "Hydro",
+      weaponType: "Catalyst",
+      rarity: 5,
+      level: 90,
+      constellation: 0,
+    },
+  ];
 
   return (
     <AppShell>
-      {/* Welcome Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-border/60">
+      {/* Dashboard Top Header & Action Buttons */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-amber-500/15">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
+          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
             Traveler Dashboard
-            <span className="text-sm font-normal text-muted-foreground font-serif italic">
+            <span className="text-xs sm:text-sm font-normal text-muted-foreground font-serif italic">
               — Teyvat Expedition Overview
             </span>
           </h2>
           <p className="text-xs text-muted-foreground mt-0.5">
-            Real-time status of your roster, pity progression, and wishing vault.
+            Real-time status of your roster, pity progression, and wishing goals.
           </p>
         </div>
-        <div className="flex items-center gap-2">
+
+        {/* Action Buttons matching screenshot */}
+        <div className="flex items-center gap-2.5 shrink-0">
           <Link href="/pull-planner">
-            <Button variant="fantasy" size="sm" className="gap-1.5">
-              <Sparkles className="w-3.5 h-3.5" />
+            <Button
+              className="bg-gradient-to-r from-amber-400 via-gold-500 to-yellow-500 text-stone-950 font-bold hover:brightness-110 shadow-[0_0_15px_rgba(245,158,11,0.35)] text-xs h-8 px-3.5 gap-1.5"
+            >
+              <Sparkles className="w-3.5 h-3.5 fill-current" />
               Pull Planner
             </Button>
           </Link>
           <Link href="/characters">
-            <Button variant="outline-gold" size="sm" className="gap-1.5">
+            <Button
+              variant="outline"
+              className="border-white/20 bg-white/5 hover:bg-white/10 text-foreground font-medium text-xs h-8 px-3.5 gap-1.5 backdrop-blur-md"
+            >
               <Users className="w-3.5 h-3.5" />
               View Roster
             </Button>
@@ -71,162 +139,237 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {/* Row 1: Core Vault & Character Counts */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          label="Available Wishes"
-          value={totalWishes}
-          subValue={`${wishesFromPrimos} from Primos + ${profile.intertwinedFates} Fates`}
-          icon={Sparkles}
-          highlight="gold"
-          trend="Ready to pull"
-        />
+      {/* Row 1: 4 Stat Cards matching screenshot styling */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+        {/* Card 1: Available Wishes */}
+        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
+              Available Wishes
+            </p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-black font-mono text-foreground leading-none">
+                {totalWishes}
+              </span>
+              <span className="text-[11px] text-muted-foreground font-medium">
+                ({wishesFromPrimos} from Primos + {profile.intertwinedFates} Fates)
+              </span>
+            </div>
+            <p className="text-[11px] text-emerald-400 font-medium pt-1">
+              Ready to pull
+            </p>
+          </div>
+          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+            <Sparkles className="w-4 h-4 fill-current" />
+          </div>
+        </div>
 
-        <StatCard
-          label="Primogem Balance"
-          value={profile.primogems.toLocaleString()}
-          subValue={`≈ ${wishesFromPrimos} Wishes`}
-          icon={Star}
-          highlight="default"
-          trend="+60 Daily Commissions"
-        />
+        {/* Card 2: Primogem Balance */}
+        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
+              Primogem Balance
+            </p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-black font-mono text-foreground leading-none">
+                {profile.primogems.toLocaleString()}
+              </span>
+              <span className="text-[11px] text-muted-foreground font-medium">
+                (+{wishesFromPrimos} Wishes)
+              </span>
+            </div>
+            <p className="text-[11px] text-amber-400 font-medium pt-1">
+              +60 Daily Commissions
+            </p>
+          </div>
+          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+            <Star className="w-4 h-4 fill-current" />
+          </div>
+        </div>
 
-        <StatCard
-          label="Character Pity"
-          value={`${currentPity}/90`}
-          subValue={isGuaranteed ? "Guaranteed Banner" : "50/50 Active"}
-          icon={Target}
-          highlight="gold"
-          trend={`${90 - currentPity} pulls to 5★`}
-        />
+        {/* Card 3: Character Pity */}
+        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
+              Character Pity
+            </p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-black font-mono text-amber-300 leading-none">
+                {currentPity}/90
+              </span>
+              <span className="text-[11px] text-muted-foreground font-medium">
+                ({isGuaranteed ? "Guaranteed" : "50/50 Active"})
+              </span>
+            </div>
+            <p className="text-[11px] text-muted-foreground pt-1">
+              {Math.max(0, 74 - currentPity)} pulls to soft
+            </p>
+          </div>
+          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+            <Target className="w-4 h-4" />
+          </div>
+        </div>
 
-        <StatCard
-          label="Owned Characters"
-          value={rosterStats.totalOwned}
-          subValue={`${rosterStats.fiveStars} Five-Stars • ${rosterStats.fourStars} Four-Stars`}
-          icon={Users}
-          highlight="default"
-          trend={`${rosterStats.maxLevelCount} at Max Lv. 90`}
-        />
+        {/* Card 4: Owned Characters */}
+        <div className="genshin-card filigree-corners p-4 flex items-start justify-between">
+          <div className="space-y-1">
+            <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
+              Owned Characters
+            </p>
+            <div className="flex items-baseline gap-1.5">
+              <span className="text-2xl font-black font-mono text-foreground leading-none">
+                {rosterStats.totalOwned}
+              </span>
+              <span className="text-[11px] text-muted-foreground font-medium">
+                ({rosterStats.fiveStars} Five-Stars • {rosterStats.fourStars} Four-Stars)
+              </span>
+            </div>
+            <p className="text-[11px] text-muted-foreground pt-1">
+              {rosterStats.maxLevelCount} at Max Lv. 90
+            </p>
+          </div>
+          <div className="w-9 h-9 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shadow-sm shrink-0">
+            <Users className="w-4 h-4" />
+          </div>
+        </div>
       </div>
 
-      {/* Row 2: Target Character Tracker & Pity Radar */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Next Target Focus Card */}
-        <Card fantasy className="lg:col-span-2">
-          <CardHeader className="pb-3 border-b border-border/50">
-            <div className="flex items-center justify-between">
+      {/* Row 2: Target Character Tracker & Pity Radar (Left ~65%, Right ~35%) */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+        {/* Left Column (8 cols): Active Target Character Card */}
+        <div className="lg:col-span-7 xl:col-span-8 genshin-card filigree-corners p-5 space-y-4 relative overflow-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center">
+                <Flame className="w-3.5 h-3.5 fill-current" />
+              </div>
               <div>
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Flame className="w-4 h-4 text-red-500" />
-                  Active Target Character
-                </CardTitle>
-                <CardDescription className="text-xs">
-                  Target priority tracking and wish allocation analysis
-                </CardDescription>
-              </div>
-              <Badge variant="rarity-5">Next Focus</Badge>
-            </div>
-          </CardHeader>
-
-          <CardContent className="p-6 space-y-5">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-muted/40 border border-gold-500/20">
-              <div className="flex items-center gap-4">
-                <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/30 via-red-500/20 to-purple-500/20 border border-gold-500/40 flex items-center justify-center font-bold text-lg text-gold-500 shadow-inner">
-                  5★
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-foreground">
-                      {nextTarget?.name ?? "Hu Tao"}
-                    </h3>
-                    <Badge variant="pyro">Pyro</Badge>
-                    <span className="text-xs text-muted-foreground font-mono">Polearm</span>
-                  </div>
-                  <p className="text-xs text-muted-foreground italic mt-0.5">
-                    {nextTarget?.title ?? "Fragrance in Thaw"} • {nextTarget?.region ?? "Liyue"}
-                  </p>
-                </div>
-              </div>
-
-              <div className="text-left sm:text-right">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider">Status</p>
-                <p className="text-sm font-semibold text-amber-600 dark:text-amber-400">
-                  {isGuaranteed ? "Guaranteed Rate-Up" : "On 50/50"}
-                </p>
+                <h3 className="font-bold text-sm text-foreground">Active Target Character</h3>
+                <p className="text-[11px] text-muted-foreground">Target priority for wishing and pull allocation analysis</p>
               </div>
             </div>
+            <span className="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/35">
+              Next Focus
+            </span>
+          </div>
 
-            {/* Pity Progress Bar */}
-            <div className="space-y-2">
-              <div className="flex items-center justify-between text-xs font-medium">
-                <span className="text-muted-foreground">Pity Progress to Next 5-Star:</span>
-                <span className="font-mono text-gold-600 dark:text-gold-400 font-bold">
-                  {currentPity} / 90 Pulls ({pityPct}%)
-                </span>
+          {/* Character Banner with floating Boo Tao ghost */}
+          <div className="p-4 rounded-xl bg-[#111a2f]/90 border border-amber-500/25 relative overflow-hidden flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4 relative z-10">
+              {/* 5-Star Ornamental Icon */}
+              <div className="w-13 h-13 rounded-xl bg-gradient-to-br from-amber-500/25 via-red-500/20 to-purple-500/20 border border-amber-400/40 p-2.5 flex items-center justify-center text-amber-300 font-black text-sm shadow-inner">
+                5★
               </div>
-              <div className="h-3 w-full rounded-full bg-muted overflow-hidden border border-border/80">
-                <div
-                  className="h-full bg-gradient-to-r from-gold-500 via-amber-400 to-yellow-500 rounded-full transition-all duration-500"
-                  style={{ width: `${pityPct}%` }}
-                />
-              </div>
-              <div className="flex items-center justify-between text-[11px] text-muted-foreground pt-1">
-                <span>0 Pulls</span>
-                <span className="text-amber-600 dark:text-amber-400 font-semibold">
-                  Soft Pity (74+)
-                </span>
-                <span>Hard Pity (90)</span>
-              </div>
-            </div>
-
-            {/* Requirement Summary Callout */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 text-xs">
-              <div className="p-3 rounded-lg bg-card border border-border/70 space-y-1">
-                <span className="text-muted-foreground">Wishes to 5-Star:</span>
-                <p className="font-bold text-sm text-foreground">
-                  {targetWishes.wishesToNext5Star} Pulls{" "}
-                  <span className="text-[11px] text-muted-foreground font-normal">
-                    ({targetWishes.wishesToNext5Star * 160} Primos)
-                  </span>
-                </p>
-              </div>
-              <div className="p-3 rounded-lg bg-card border border-border/70 space-y-1">
-                <span className="text-muted-foreground">Guaranteed Target Budget:</span>
-                <p className="font-bold text-sm text-foreground">
-                  {targetWishes.wishesToGuaranteedTarget} Pulls{" "}
-                  <span className="text-[11px] text-muted-foreground font-normal">
-                    (Worst Case)
-                  </span>
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Character Progression Overview Breakdown */}
-        <Card fantasy>
-          <CardHeader className="pb-3 border-b border-border/50">
-            <CardTitle className="text-base flex items-center gap-2">
-              <TrendingUp className="w-4 h-4 text-gold-500" />
-              Roster Progression
-            </CardTitle>
-            <CardDescription className="text-xs">
-              Investment breakdown across owned characters
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-6 space-y-4">
-            <div className="space-y-3">
               <div>
-                <div className="flex justify-between text-xs font-medium mb-1">
-                  <span>Level 90 (Max Ascension)</span>
-                  <span className="font-mono text-gold-500 font-bold">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h4 className="text-base font-bold text-foreground">
+                    {nextTarget?.name ?? "Hu Tao"}
+                  </h4>
+                  <Badge variant="pyro" className="text-[10px] px-2 py-0">Pyro</Badge>
+                  <span className="text-xs text-muted-foreground font-mono">Polearm</span>
+                </div>
+                <p className="text-xs text-muted-foreground italic mt-0.5">
+                  {nextTarget?.title ?? "Fragrance in Thaw"} — {nextTarget?.region ?? "Liyue"}
+                </p>
+              </div>
+            </div>
+
+            {/* Right Status */}
+            <div className="text-left sm:text-right relative z-10">
+              <p className="text-[10px] text-muted-foreground uppercase tracking-wider font-semibold">Status</p>
+              <p className="text-xs font-bold text-amber-400">
+                {isGuaranteed ? "Guaranteed Rate-Up" : "On 50/50"}
+              </p>
+            </div>
+
+            {/* Floating Animated Boo Tao Ghosts (as seen in the screenshot!) */}
+            <div className="absolute right-24 -top-1 pointer-events-none opacity-85">
+              <BooTaoGhost className="w-9 h-9" />
+            </div>
+            <div className="absolute right-12 top-6 pointer-events-none opacity-60">
+              <BooTaoGhost className="w-7 h-7" style={{ animationDelay: "0.5s" }} />
+            </div>
+            <div className="absolute right-40 bottom-1 pointer-events-none opacity-50">
+              <BooTaoGhost className="w-6 h-6" style={{ animationDelay: "1.2s" }} />
+            </div>
+          </div>
+
+          {/* Pity Progress Gauge */}
+          <div className="space-y-2 pt-1">
+            <div className="flex items-center justify-between text-xs">
+              <span className="text-muted-foreground font-medium">Pity Progress to Next 5-Star:</span>
+              <span className="font-mono text-amber-300 font-bold">
+                {currentPity} / 90 Pulls ({pityPct}%)
+              </span>
+            </div>
+
+            {/* Glowing Golden Pity Bar */}
+            <div className="h-2.5 w-full rounded-full bg-[#0a1222] overflow-hidden border border-amber-500/20 p-0.5">
+              <div
+                className="h-full rounded-full pity-glow-bar transition-all duration-500"
+                style={{ width: `${pityPct}%` }}
+              />
+            </div>
+
+            {/* Markers */}
+            <div className="flex items-center justify-between text-[10px] text-muted-foreground/75 font-mono">
+              <span>0 Pulls</span>
+              <span className="text-amber-400 font-bold">Soft Pity (74+)</span>
+              <span>Hard Pity (90)</span>
+            </div>
+          </div>
+
+          {/* Bottom Requirement Boxes */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1 text-xs">
+            <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5">
+              <p className="text-[10px] uppercase font-semibold text-muted-foreground">Wishes to 5-Star:</p>
+              <p className="font-bold text-sm text-foreground font-mono">
+                {targetWishes.wishesToNext5Star} Pulls{" "}
+                <span className="text-xs text-muted-foreground font-normal">
+                  ({targetWishes.wishesToNext5Star * 160} Primos)
+                </span>
+              </p>
+            </div>
+            <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5">
+              <p className="text-[10px] uppercase font-semibold text-muted-foreground">Guaranteed Target Budget:</p>
+              <p className="font-bold text-sm text-foreground font-mono">
+                {targetWishes.wishesToGuaranteedTarget} Pulls{" "}
+                <span className="text-xs text-muted-foreground font-normal">
+                  (Worst Case)
+                </span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Right Column (4-5 cols): Roster Progression Card */}
+        <div className="lg:col-span-5 xl:col-span-4 genshin-card filigree-corners p-5 space-y-4 flex flex-col justify-between">
+          <div className="space-y-4">
+            {/* Header */}
+            <div className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded-full bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                <TrendingUp className="w-3.5 h-3.5" />
+              </div>
+              <div>
+                <h3 className="font-bold text-sm text-foreground">Roster Progression</h3>
+                <p className="text-[11px] text-muted-foreground">Investment breakdown across owned characters</p>
+              </div>
+            </div>
+
+            {/* Level Breakdown Progress Bars */}
+            <div className="space-y-3 pt-1">
+              {/* Level 90 */}
+              <div>
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-muted-foreground">Level 90 (Max Ascension)</span>
+                  <span className="font-mono text-amber-300 font-bold">
                     {characters.filter((c) => c.level === 90).length} Characters
                   </span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-[#0a1222] overflow-hidden">
                   <div
-                    className="h-full bg-gold-500 rounded-full"
+                    className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full"
                     style={{
                       width: `${(characters.filter((c) => c.level === 90).length / characters.length) * 100}%`,
                     }}
@@ -234,16 +377,17 @@ export default function DashboardPage() {
                 </div>
               </div>
 
+              {/* Level 80 */}
               <div>
-                <div className="flex justify-between text-xs font-medium mb-1">
-                  <span>Level 80 (Ascension 5+)</span>
-                  <span className="font-mono text-foreground">
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-muted-foreground">Level 80 (Ascension 5+)</span>
+                  <span className="font-mono text-foreground font-bold">
                     {characters.filter((c) => c.level === 80).length} Characters
                   </span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-[#0a1222] overflow-hidden">
                   <div
-                    className="h-full bg-amber-400/80 rounded-full"
+                    className="h-full bg-amber-400/70 rounded-full"
                     style={{
                       width: `${(characters.filter((c) => c.level === 80).length / characters.length) * 100}%`,
                     }}
@@ -251,78 +395,106 @@ export default function DashboardPage() {
                 </div>
               </div>
 
+              {/* Average Level with Elemental Dot Clusters */}
               <div>
-                <div className="flex justify-between text-xs font-medium mb-1">
-                  <span>Average Roster Level</span>
-                  <span className="font-mono font-bold text-foreground">
+                <div className="flex justify-between text-xs mb-1">
+                  <span className="text-muted-foreground">Average Roster Level</span>
+                  <span className="font-mono text-foreground font-bold">
                     Lv. {rosterStats.avgLevel}
                   </span>
                 </div>
-                <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+                <div className="h-1.5 w-full rounded-full bg-[#0a1222] overflow-hidden relative">
                   <div
-                    className="h-full bg-purple-400 rounded-full"
+                    className="h-full bg-gradient-to-r from-purple-500 via-indigo-400 to-teal-400 rounded-full"
                     style={{ width: `${(rosterStats.avgLevel / 90) * 100}%` }}
                   />
                 </div>
               </div>
             </div>
 
-            <div className="pt-4 border-t border-border/70 space-y-2">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+            {/* Roster Metadata Counts */}
+            <div className="pt-3 border-t border-border/60 space-y-1.5 text-xs text-muted-foreground">
+              <div className="flex items-center justify-between">
                 <span>Rarity Composition:</span>
                 <span className="font-semibold text-foreground">
-                  {rosterStats.fiveStars} × 5★ | {rosterStats.fourStars} × 4★
+                  {rosterStats.fiveStars} × 5★ · {rosterStats.fourStars} × 4★
                 </span>
               </div>
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
+              <div className="flex items-center justify-between">
                 <span>Max Friendship (Lv. 10):</span>
                 <span className="font-semibold text-foreground">
                   {characters.filter((c) => c.friendshipLevel === 10).length} / {characters.length}
                 </span>
               </div>
             </div>
+          </div>
 
-            <Link href="/progression" className="block pt-2">
-              <Button variant="outline-gold" size="sm" className="w-full text-xs">
-                Open Progression Planner
-              </Button>
-            </Link>
-          </CardContent>
-        </Card>
+          {/* Action Button */}
+          <Link href="/progression" className="block pt-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="w-full text-xs border-amber-500/30 hover:bg-amber-500/10 text-amber-300 font-semibold h-8"
+            >
+              Open Progression Planner
+            </Button>
+          </Link>
+        </div>
       </div>
 
-      {/* Row 3: Recently Updated Characters Grid */}
-      <div className="space-y-3">
+      {/* Row 3: Recently Updated Characters (Horizontal Grid matching screenshot) */}
+      <div className="space-y-3 pt-2">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-lg font-bold text-foreground tracking-tight">
+            <h3 className="text-base font-bold text-foreground tracking-tight">
               Recently Updated Characters
             </h3>
             <p className="text-xs text-muted-foreground">
-              Characters actively maintained and leveled in this traveler profile
+              Characters actively maintained and tracked in this traveler profile.
             </p>
           </div>
           <Link href="/characters">
-            <Button variant="ghost" size="sm" className="text-xs text-gold-600 dark:text-gold-400 gap-1">
+            <Button variant="ghost" size="sm" className="text-xs text-amber-400 hover:text-amber-300 gap-1 h-7 px-2">
               View All ({characters.length})
               <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </Link>
         </div>
 
+        {/* 6 Character Cards matching screenshot */}
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {recentCharacters.map((char) => (
-            <CharacterCard
-              key={char.characterId}
-              id={char.characterId}
-              name={char.name}
-              title={char.title}
-              element={char.element}
-              weaponType={char.weaponType}
-              rarity={char.rarity}
-              level={char.level}
-              constellation={char.constellation}
-            />
+            <div
+              key={char.id}
+              className="genshin-card filigree-corners p-3 space-y-2 hover:border-amber-400/50 transition-all flex flex-col justify-between"
+            >
+              {/* Top row: Name & Element icon */}
+              <div className="space-y-0.5">
+                <div className="flex items-start justify-between gap-1">
+                  <h4 className="font-bold text-xs text-foreground truncate leading-tight">
+                    {char.name}
+                  </h4>
+                  <Badge variant={char.element.toLowerCase() as any} className="text-[9px] px-1.5 py-0 h-4 shrink-0">
+                    {char.element}
+                  </Badge>
+                </div>
+                <p className="text-[10px] text-muted-foreground truncate">{char.title}</p>
+              </div>
+
+              {/* Middle row: 5 Stars + Weapon */}
+              <div className="flex items-center justify-between text-[10px] text-amber-400 font-mono">
+                <span>★★★★★</span>
+                <span className="text-[10px] text-muted-foreground">{char.weaponType}</span>
+              </div>
+
+              {/* Bottom row: Level Pill & Character Mini Avatar */}
+              <div className="pt-2 border-t border-border/50 flex items-center justify-between">
+                <span className="text-[10px] font-mono text-muted-foreground">
+                  Lv. {char.level}/90
+                </span>
+                <MiniCharacterAvatar characterId={char.id} className="w-6 h-6" />
+              </div>
+            </div>
           ))}
         </div>
       </div>

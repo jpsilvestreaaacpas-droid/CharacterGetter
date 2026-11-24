@@ -53,7 +53,16 @@ export default function BannerRadarPage() {
     evidenceNotes: "",
   });
 
-  const versions = ["all", "5.3", "5.4", "5.5"];
+  const versions = React.useMemo(
+    () => [
+      "all",
+      ...Array.from(new Set(predictions.map((p) => p.estimatedVersion))).sort((a, b) =>
+        a.localeCompare(b, undefined, { numeric: true })
+      ),
+    ],
+    [predictions]
+  );
+
   const statuses = ["all", "Officially confirmed", "Corroborated", "Developing", "Disputed", "Stale"];
 
   const filteredPredictions = predictions.filter((p) => {
@@ -149,11 +158,10 @@ export default function BannerRadarPage() {
               <button
                 key={v}
                 onClick={() => setFilterVersion(v)}
-                className={`text-xs px-2.5 py-1 rounded transition-colors ${
-                  filterVersion === v
+                className={`text-xs px-2.5 py-1 rounded transition-colors ${filterVersion === v
                     ? "bg-gold-500/20 text-gold-600 dark:text-gold-400 font-semibold"
                     : "text-muted-foreground hover:text-foreground"
-                }`}
+                  }`}
               >
                 {v === "all" ? "All Versions" : `v${v}`}
               </button>
@@ -166,11 +174,10 @@ export default function BannerRadarPage() {
               <button
                 key={s}
                 onClick={() => setFilterStatus(s)}
-                className={`text-xs px-2.5 py-1 rounded transition-colors ${
-                  filterStatus === s
+                className={`text-xs px-2.5 py-1 rounded transition-colors ${filterStatus === s
                     ? "bg-gold-500/20 text-gold-600 dark:text-gold-400 font-semibold"
                     : "text-muted-foreground hover:text-foreground"
-                }`}
+                  }`}
               >
                 {s === "all" ? "All Statuses" : s}
               </button>
@@ -193,9 +200,8 @@ export default function BannerRadarPage() {
           return (
             <Card
               key={pred.id}
-              className={`border-border/70 overflow-hidden flex flex-col justify-between transition-all hover:border-gold-500/40 ${
-                evalRes.isOfficiallyConfirmed ? "ring-1 ring-emerald-500/30 bg-emerald-500/5" : ""
-              }`}
+              className={`border-border/70 overflow-hidden flex flex-col justify-between transition-all hover:border-gold-500/40 ${evalRes.isOfficiallyConfirmed ? "ring-1 ring-emerald-500/30 bg-emerald-500/5" : ""
+                }`}
             >
               <div className="p-4 space-y-3">
                 {/* Top Badge Line */}
@@ -209,15 +215,14 @@ export default function BannerRadarPage() {
                       v{pred.estimatedVersion} Phase {pred.estimatedPhase}
                     </span>
                     <span
-                      className={`text-xs font-semibold px-2 py-0.5 rounded border ${
-                        evalRes.isOfficiallyConfirmed
+                      className={`text-xs font-semibold px-2 py-0.5 rounded border ${evalRes.isOfficiallyConfirmed
                           ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30"
                           : evalRes.status === "Corroborated"
-                          ? "bg-gold-500/15 text-gold-600 dark:text-gold-400 border-gold-500/30"
-                          : evalRes.status === "Disputed"
-                          ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30"
-                          : "bg-muted/50 text-muted-foreground border-border/60"
-                      }`}
+                            ? "bg-gold-500/15 text-gold-600 dark:text-gold-400 border-gold-500/30"
+                            : evalRes.status === "Disputed"
+                              ? "bg-amber-500/15 text-amber-600 dark:text-amber-400 border-amber-500/30"
+                              : "bg-muted/50 text-muted-foreground border-border/60"
+                        }`}
                     >
                       {evalRes.status}
                     </span>
@@ -252,15 +257,14 @@ export default function BannerRadarPage() {
                 <div className="space-y-1">
                   <div className="h-2 w-full rounded-full bg-muted/60 overflow-hidden">
                     <div
-                      className={`h-full transition-all rounded-full ${
-                        evalRes.isOfficiallyConfirmed
+                      className={`h-full transition-all rounded-full ${evalRes.isOfficiallyConfirmed
                           ? "bg-emerald-500"
                           : evalRes.probabilityPercentage >= 75
-                          ? "bg-gold-500"
-                          : evalRes.probabilityPercentage >= 50
-                          ? "bg-blue-500"
-                          : "bg-stone-500"
-                      }`}
+                            ? "bg-gold-500"
+                            : evalRes.probabilityPercentage >= 50
+                              ? "bg-blue-500"
+                              : "bg-stone-500"
+                        }`}
                       style={{ width: `${evalRes.probabilityPercentage}%` }}
                     />
                   </div>

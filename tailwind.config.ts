@@ -16,6 +16,10 @@ const config: Config = {
       },
     },
     extend: {
+      fontFamily: {
+        sans: ['"Zen Maru Gothic"', "ui-rounded", "system-ui", "sans-serif"],
+        display: ["Fredoka", "ui-rounded", "system-ui", "sans-serif"],
+      },
       colors: {
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
@@ -50,19 +54,33 @@ const config: Config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Fantasy / Celestial & Elemental Palette
+        // Celestial gold (brighter in the mid range so it pops on navy)
         gold: {
           50: "#FCF9EE",
           100: "#F7F1D6",
           200: "#EFE2AD",
-          300: "#E4CF80",
-          400: "#D7B954",
-          500: "#C5A034", // Muted Celestial Gold
+          300: "#F9D77A",
+          400: "#F6C453",
+          500: "#E3B13B",
           600: "#A98326",
           700: "#86641E",
           800: "#694C1D",
           900: "#553D1C",
-          DEFAULT: "#C5A034",
+          DEFAULT: "#E3B13B",
+        },
+        // New guild accents (use for highlights, gauges, badges)
+        aqua: {
+          DEFAULT: "#4FE0D0",
+          deep: "#1FA99B",
+          ink: "#062A2B",
+        },
+        crimson: {
+          DEFAULT: "#FF5C7A",
+          deep: "#C22F4C",
+        },
+        lilac: {
+          DEFAULT: "#B69CFF",
+          deep: "#7D5FD6",
         },
         element: {
           pyro: "#FF6640",
@@ -87,9 +105,25 @@ const config: Config = {
       boxShadow: {
         "gold-sm": "0 1px 3px 0 rgba(197, 160, 52, 0.15), 0 1px 2px -1px rgba(197, 160, 52, 0.1)",
         "gold-md": "0 4px 6px -1px rgba(197, 160, 52, 0.2), 0 2px 4px -2px rgba(197, 160, 52, 0.15)",
-        "gold-glow": "0 0 15px rgba(215, 185, 84, 0.35)",
-        "card-fantasy": "0 4px 20px -2px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(197, 160, 52, 0.15)",
-        "card-fantasy-dark": "0 4px 25px -2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(215, 185, 84, 0.2)",
+        "gold-glow": "0 0 15px rgba(246, 196, 83, 0.35)",
+        "aqua-glow": "0 0 18px rgba(79, 224, 208, 0.35)",
+        chunky: "0 6px 0 rgba(0, 0, 0, 0.32)",
+        "card-fantasy": "0 6px 0 rgba(0, 0, 0, 0.12), inset 0 0 0 2px rgba(197, 160, 52, 0.15)",
+        "card-fantasy-dark": "0 6px 0 rgba(0, 0, 0, 0.32), inset 0 0 0 2px rgba(246, 196, 83, 0.14)",
+      },
+      keyframes: {
+        twinkle: {
+          "0%, 100%": { opacity: "1", transform: "scale(1)" },
+          "50%": { opacity: "0.55", transform: "scale(0.85)" },
+        },
+        float: {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(-4px)" },
+        },
+      },
+      animation: {
+        twinkle: "twinkle 2.4s ease-in-out infinite",
+        float: "float 3s ease-in-out infinite",
       },
     },
   },
