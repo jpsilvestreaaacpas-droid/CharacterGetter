@@ -8,10 +8,10 @@ import {
   LayoutDashboard,
   Users,
   Sparkles,
-  Radar,
+  CalendarHeart,
   Package,
   TrendingUp,
-  Shield,
+  UserRoundCog,
   Settings,
   Compass,
   Menu,
@@ -19,60 +19,17 @@ import {
   Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { HuTaoChibi } from "@/components/ui/genshin-chibi";
-import { CharacterSprite } from "@/components/ui/character-sprite";
+import { ChatEmojiImg } from "@/components/theme/chat-emoji-context";
 
 export const NAV_ITEMS = [
-  {
-    title: "Dashboard",
-    href: "/dashboard",
-    icon: LayoutDashboard,
-    badge: null,
-    hasChibi: "hutao",
-  },
-  {
-    title: "Characters",
-    href: "/characters",
-    icon: Users,
-    badge: null,
-  },
-  {
-    title: "Pull Planner",
-    href: "/pull-planner",
-    icon: Sparkles,
-    badge: "Pity",
-  },
-  {
-    title: "Banner Radar",
-    href: "/banner-radar",
-    icon: Radar,
-    badge: "New",
-  },
-  {
-    title: "Resources",
-    href: "/resources",
-    icon: Package,
-    badge: null,
-  },
-  {
-    title: "Progression",
-    href: "/progression",
-    icon: TrendingUp,
-    badge: null,
-    hasSprite: "furina",
-  },
-  {
-    title: "Teams",
-    href: "/teams",
-    icon: Shield,
-    badge: null,
-  },
-  {
-    title: "Settings",
-    href: "/settings",
-    icon: Settings,
-    badge: null,
-  },
+  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, badge: null, slot: "sidebar_dashboard" as const },
+  { title: "Characters", href: "/characters", icon: Users, badge: null, slot: "sidebar_character" as const },
+  { title: "Pull Planner", href: "/pull-planner", icon: Sparkles, badge: "Pity", slot: "sidebar_pull" as const },
+  { title: "Banner Radar", href: "/banner-radar", icon: CalendarHeart, badge: "New", slot: "sidebar_banner" as const },
+  { title: "Resources", href: "/resources", icon: Package, badge: null, slot: "sidebar_resources" as const },
+  { title: "Progression", href: "/progression", icon: TrendingUp, badge: null, slot: "sidebar_progression" as const },
+  { title: "Teams", href: "/teams", icon: UserRoundCog, badge: null, slot: "sidebar_teams" as const },
+  { title: "Settings", href: "/settings", icon: Settings, badge: null, slot: "sidebar_settings" as const },
 ];
 
 export function Sidebar({ className }: { className?: string }) {
@@ -101,7 +58,6 @@ export function Sidebar({ className }: { className?: string }) {
         />
       )}
 
-      {/* Sidebar container matching screenshot */}
       <aside
         className={cn(
           "fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-[#0a1222]/92 backdrop-blur-2xl border-r border-amber-500/20 transition-transform duration-300 lg:translate-x-0 shadow-2xl",
@@ -158,17 +114,10 @@ export function Sidebar({ className }: { className?: string }) {
                   )}
                 </Link>
 
-                {/* Chibi mascot on Dashboard */}
-                {item.hasChibi === "hutao" && (
-                  <div className="absolute -top-3.5 -right-1 z-20 pointer-events-none animate-genshin-float">
-                    <HuTaoChibi className="w-11 h-11 drop-shadow-md" />
-                  </div>
-                )}
-
-                {/* Character sprite on Progression / Resources */}
-                {item.hasSprite === "furina" && (
-                  <div className="absolute -top-3.5 -right-0.5 z-20 pointer-events-none animate-genshin-float">
-                    <CharacterSprite characterId="furina" size="sm" className="w-10 h-10" />
+                {/* Chat emoji decoration on active nav items with assigned slots */}
+                {"slot" in item && item.slot && isActive && (
+                  <div className="absolute -top-3 -right-1 z-20 animate-genshin-float">
+                    <ChatEmojiImg slot={item.slot} size={36} animate={false} />
                   </div>
                 )}
               </div>
@@ -176,7 +125,7 @@ export function Sidebar({ className }: { className?: string }) {
           })}
         </div>
 
-        {/* Footer info with Zhongli sprite */}
+        {/* Footer */}
         <div className="p-4 border-t border-amber-500/15 bg-black/25 text-xs text-muted-foreground relative">
           <div className="flex items-end justify-between">
             <div className="space-y-0.5">
@@ -184,15 +133,13 @@ export function Sidebar({ className }: { className?: string }) {
                 <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/25">
                   Milestone 2
                 </span>
-                <span className="text-amber-400 font-semibold text-[11px]">Resources & Teams</span>
+                <span className="text-amber-400 font-semibold text-[11px]">Resources &amp; Teams</span>
               </div>
               <p className="text-[10px] text-muted-foreground/70">Independent Teyvat Companion</p>
             </div>
 
-            {/* Character Sprite: Zhongli */}
-            <div className="pointer-events-none transform -translate-y-1">
-              <CharacterSprite characterId="zhongli" size="sm" className="w-11 h-11" />
-            </div>
+            {/* Chat emoji decoration in footer */}
+            <ChatEmojiImg slot="sidebar_footer" size={36} animate={false} />
           </div>
         </div>
       </aside>

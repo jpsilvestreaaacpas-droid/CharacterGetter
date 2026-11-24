@@ -1,0 +1,9 @@
+{
+  "anemo": "/images/elements/anemo.png",
+  "geo": "/images/elements/geo.png",
+  "electro": "/images/elements/electro.png",
+  "dendro": "/images/elements/dendro.png",
+  "hydro": "/images/elements/hydro.png",
+  "pyro": "/images/elements/pyro.png",
+  "cryo": "/images/elements/cryo.png"
+}

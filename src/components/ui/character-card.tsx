@@ -2,6 +2,7 @@ import * as React from "react";
 import { cn } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ElementIcon } from "@/components/ui/element-icon";
 import { Star, Shield, Zap } from "lucide-react";
 
 export type ElementType = "Pyro" | "Hydro" | "Anemo" | "Electro" | "Dendro" | "Cryo" | "Geo";
@@ -78,8 +79,9 @@ export function CharacterCard({
               <p className="text-xs text-muted-foreground italic line-clamp-1">{title}</p>
             )}
           </div>
-          <Badge variant={elementBadgeVariant} className="text-[11px] capitalize">
-            {element}
+          <Badge variant={elementBadgeVariant} className="text-[11px] capitalize flex items-center gap-1 pl-1.5 pr-2 py-0.5">
+            <ElementIcon element={element} size="xs" />
+            <span>{element}</span>
           </Badge>
         </div>
 

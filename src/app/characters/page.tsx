@@ -6,6 +6,7 @@ import { CharacterCard } from "@/components/ui/character-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { ElementIcon } from "@/components/ui/element-icon";
 import { getDemoData } from "@/lib/data/demo-provider";
 import { getPlaystylesForCharacter } from "@/lib/data/playstyles";
 import { analyzePlayerBuildAgainstPlaystyle } from "@/lib/playstyles/analyzer";
@@ -172,12 +173,13 @@ export default function CharactersPage() {
               <button
                 key={elem}
                 onClick={() => setSelectedElement(elem)}
-                className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors border ${selectedElement === elem
+                className={`px-2.5 py-1 text-xs rounded-md font-medium transition-colors border flex items-center gap-1.5 ${selectedElement === elem
                     ? "bg-primary text-primary-foreground border-transparent font-semibold shadow-sm"
                     : "bg-card border-border/70 text-muted-foreground hover:bg-muted"
                   }`}
               >
-                {elem}
+                {elem !== "All" && <ElementIcon element={elem} size="xs" />}
+                <span>{elem}</span>
               </button>
             ))}
           </div>
@@ -252,8 +254,9 @@ export default function CharactersPage() {
                   )}
                 </div>
                 <div className="hidden sm:flex items-center gap-2">
-                  <Badge variant={activeModalChar.element.toLowerCase() as any}>
-                    {activeModalChar.element}
+                  <Badge variant={activeModalChar.element.toLowerCase() as any} className="flex items-center gap-1.5 pl-1.5 pr-2">
+                    <ElementIcon element={activeModalChar.element} size="xs" />
+                    <span>{activeModalChar.element}</span>
                   </Badge>
                   <Badge variant={activeModalChar.rarity === 5 ? "rarity-5" : "rarity-4"}>
                     {activeModalChar.rarity}-Star {activeModalChar.weaponType}

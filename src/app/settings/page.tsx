@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CommunityDatasetImportSchema } from "@/lib/data/schemas";
-import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw, User, Save, Image as ImageIcon } from "lucide-react";
+import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw, User, Save, Image as ImageIcon, Shuffle } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { useRegionalBackground, REGIONAL_BACKGROUNDS, RegionalBackgroundId } from "@/components/theme/background-context";
+import { useChatEmojis, ChatEmojiImg, DecorationSlot } from "@/components/theme/chat-emoji-context";
 
 export default function SettingsPage() {
   const { currentBackground, setBackground } = useRegionalBackground();
+  const { shuffleAll, shuffleSlot, getSlot, assignments, status: emojiStatus, reload: reloadEmojis } = useChatEmojis();
   const [profile, setProfile] = React.useState({
     travelerName: "Lumine",
     adventureRank: 58,
@@ -189,6 +191,90 @@ export default function SettingsPage() {
             <CardContent className="flex items-center justify-between">
               <span className="text-xs font-medium text-foreground">Theme Mode</span>
               <ThemeToggle />
+            </CardContent>
+          </Card>
+
+          {/* Chat Emoji Decoration Settings */}
+          <Card fantasy>
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <CardTitle className="text-base flex items-center gap-2">
+                  <Shuffle className="w-4 h-4 text-gold-500" />
+                  Chat Emoji Decorations
+                </CardTitle>
+                <Badge variant={emojiStatus === "ready" ? "gold" : emojiStatus === "error" ? "outline" : "outline"}>
+                  {emojiStatus === "loading" ? "Loading…" : emojiStatus === "ready" ? `${Object.keys(assignments).length} Assigned` : emojiStatus === "error" ? "Offline" : "Idle"}
+                </Badge>
+              </div>
+              <CardDescription className="text-xs">
+                Genshin chat emojis from the in-game Paimon&apos;s Paintings gallery replace decorative character sprites. Images load from the Fandom wiki and are not stored locally.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {emojiStatus === "error" && (
+                <div className="p-3 rounded-lg bg-destructive/10 border border-destructive/30 text-xs text-destructive-foreground flex items-start gap-2">
+                  <AlertTriangle className="w-4 h-4 text-destructive shrink-0 mt-0.5" />
+                  <span>Could not reach the Fandom API. Emoji decorations are hidden until the connection is restored.</span>
+                </div>
+              )}
+
+              {/* Current assignments preview */}
+              <div className="grid grid-cols-2 gap-2">
+                {(["sidebar_dashboard", "sidebar_progression", "sidebar_footer", "header_tab", "dashboard_target", "dashboard_target_ghost", "dashboard_roster", "dashboard_recent"] as DecorationSlot[]).map((slot) => {
+                  const emoji = getSlot(slot);
+                  const label = slot.replace(/_/g, " ").replace(/\b\w/g, c => c.toUpperCase());
+                  return (
+                    <div key={slot} className="flex items-center gap-2.5 p-2 rounded-lg bg-muted/30 border border-border/60">
+                      <div className="w-9 h-9 rounded-lg bg-black/20 flex items-center justify-center shrink-0 overflow-hidden">
+                        {emoji ? (
+                          <ChatEmojiImg emoji={emoji} size={32} />
+                        ) : (
+                          <span className="text-muted-foreground text-[9px]">—</span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-[10px] font-semibold text-foreground truncate">{label}</p>
+                        {emoji && <p className="text-[9px] text-muted-foreground truncate">{emoji.character}</p>}
+                      </div>
+                      <button
+                        onClick={() => shuffleSlot(slot)}
+                        disabled={emojiStatus !== "ready"}
+                        className="shrink-0 w-6 h-6 rounded flex items-center justify-center hover:bg-amber-500/20 text-muted-foreground hover:text-amber-300 transition-colors disabled:opacity-30"
+                        title="Shuffle this slot"
+                      >
+                        <Shuffle className="w-3 h-3" />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+
+              <div className="flex gap-2 pt-1">
+                <Button
+                  variant="outline-gold"
+                  size="sm"
+                  onClick={shuffleAll}
+                  disabled={emojiStatus !== "ready"}
+                  className="flex-1 text-xs gap-1.5"
+                >
+                  <Shuffle className="w-3.5 h-3.5" />
+                  Shuffle All Emojis
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={reloadEmojis}
+                  disabled={emojiStatus === "loading"}
+                  className="text-xs gap-1.5"
+                >
+                  <RefreshCw className={`w-3.5 h-3.5 ${emojiStatus === "loading" ? "animate-spin" : ""}`} />
+                  Reload
+                </Button>
+              </div>
+
+              <p className="text-[10px] text-muted-foreground leading-relaxed">
+                Source: <a href="https://genshin-impact.fandom.com/wiki/Chat/Gallery" target="_blank" rel="noopener noreferrer" className="text-amber-400 hover:underline">Genshin Impact Wiki — Chat/Gallery</a>. Images © miHoYo / HoYoverse. Used for non-commercial fan purposes.
+              </p>
             </CardContent>
           </Card>
 

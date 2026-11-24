@@ -5,6 +5,7 @@ import { AppShell } from "@/components/layout/app-shell";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { ElementIcon } from "@/components/ui/element-icon";
 import { Input } from "@/components/ui/input";
 import {
   Radar, Sparkles, AlertTriangle, ShieldCheck, ExternalLink,
@@ -232,8 +233,9 @@ export default function BannerRadarPage() {
                 {/* Character Name & Rerun Flag */}
                 <div className="flex items-start justify-between">
                   <div>
-                    <h3 className="font-bold text-lg text-foreground leading-tight">
-                      {pred.characterName}
+                    <h3 className="font-bold text-lg text-foreground leading-tight flex items-center gap-2">
+                      <span>{pred.characterName}</span>
+                      <ElementIcon element={pred.element} size="sm" />
                     </h3>
                     <p className="text-xs text-muted-foreground">
                       {pred.element} · {pred.weaponType} · {pred.isRerun ? "Estimated Rerun" : "New Character Debut"}

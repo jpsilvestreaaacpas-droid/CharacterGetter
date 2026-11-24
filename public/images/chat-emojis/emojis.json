@@ -1,0 +1,767 @@
+[
+  {
+    "id": "icon-emoji-paimons-paintings-01-paimon-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_01_Paimon_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_01_Paimon_1.png",
+    "character": "Paimon",
+    "set": "Paimon's Paintings Set 01",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/11/Icon_Emoji_Paimon%27s_Paintings_01_Paimon_1.png/revision/latest?cb=20240303140521"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-02-venti-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_02_Venti_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_02_Venti_1.png",
+    "character": "Venti",
+    "set": "Paimon's Paintings Set 02",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/08/Icon_Emoji_Paimon%27s_Paintings_02_Venti_1.png/revision/latest?cb=20240303114656"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-02-venti-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_02_Venti_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_02_Venti_2.png",
+    "character": "Venti",
+    "set": "Paimon's Paintings Set 02",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/1c/Icon_Emoji_Paimon%27s_Paintings_02_Venti_2.png/revision/latest?cb=20240303114705"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-03-zhongli-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_03_Zhongli_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_03_Zhongli_1.png",
+    "character": "Zhongli",
+    "set": "Paimon's Paintings Set 03",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/42/Icon_Emoji_Paimon%27s_Paintings_03_Zhongli_1.png/revision/latest?cb=20240303141844"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-03-zhongli-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_03_Zhongli_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_03_Zhongli_2.png",
+    "character": "Zhongli",
+    "set": "Paimon's Paintings Set 03",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c5/Icon_Emoji_Paimon%27s_Paintings_03_Zhongli_2.png/revision/latest?cb=20240303141923"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-04-ganyu-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_04_Ganyu_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_04_Ganyu_1.png",
+    "character": "Ganyu",
+    "set": "Paimon's Paintings Set 04",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/2b/Icon_Emoji_Paimon%27s_Paintings_04_Ganyu_1.png/revision/latest?cb=20210906044028"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-04-ganyu-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_04_Ganyu_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_04_Ganyu_2.png",
+    "character": "Ganyu",
+    "set": "Paimon's Paintings Set 04",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/3/34/Icon_Emoji_Paimon%27s_Paintings_04_Ganyu_2.png/revision/latest?cb=20210906044031"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-05-hu-tao-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_05_Hu_Tao_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_05_Hu_Tao_1.png",
+    "character": "Hu Tao",
+    "set": "Paimon's Paintings Set 05",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/93/Icon_Emoji_Paimon%27s_Paintings_05_Hu_Tao_1.png/revision/latest?cb=20240303105905"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-05-hu-tao-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_05_Hu_Tao_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_05_Hu_Tao_2.png",
+    "character": "Hu Tao",
+    "set": "Paimon's Paintings Set 05",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/18/Icon_Emoji_Paimon%27s_Paintings_05_Hu_Tao_2.png/revision/latest?cb=20240303105947"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-05-xiao-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_05_Xiao_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_05_Xiao_1.png",
+    "character": "Xiao",
+    "set": "Paimon's Paintings Set 05",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/13/Icon_Emoji_Paimon%27s_Paintings_05_Xiao_1.png/revision/latest?cb=20240228033132"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-05-xiao-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_05_Xiao_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_05_Xiao_2.png",
+    "character": "Xiao",
+    "set": "Paimon's Paintings Set 05",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/73/Icon_Emoji_Paimon%27s_Paintings_05_Xiao_2.png/revision/latest?cb=20240303110629"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-07-kaedehara-kazuha-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_07_Kaedehara_Kazuha_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_07_Kaedehara_Kazuha_1.png",
+    "character": "Kaedehara Kazuha",
+    "set": "Paimon's Paintings Set 07",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b5/Icon_Emoji_Paimon%27s_Paintings_07_Kaedehara_Kazuha_1.png/revision/latest?cb=20220101201357"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-07-kaedehara-kazuha-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_07_Kaedehara_Kazuha_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_07_Kaedehara_Kazuha_2.png",
+    "character": "Kaedehara Kazuha",
+    "set": "Paimon's Paintings Set 07",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f7/Icon_Emoji_Paimon%27s_Paintings_07_Kaedehara_Kazuha_2.png/revision/latest?cb=20220101201411"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-07-klee-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_07_Klee_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_07_Klee_1.png",
+    "character": "Klee",
+    "set": "Paimon's Paintings Set 07",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7b/Icon_Emoji_Paimon%27s_Paintings_07_Klee_1.png/revision/latest?cb=20211231163504"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-07-klee-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_07_Klee_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_07_Klee_2.png",
+    "character": "Klee",
+    "set": "Paimon's Paintings Set 07",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e9/Icon_Emoji_Paimon%27s_Paintings_07_Klee_2.png/revision/latest?cb=20211231163516"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-08-kamisato-ayaka-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_08_Kamisato_Ayaka_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_08_Kamisato_Ayaka_1.png",
+    "character": "Kamisato Ayaka",
+    "set": "Paimon's Paintings Set 08",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/00/Icon_Emoji_Paimon%27s_Paintings_08_Kamisato_Ayaka_1.png/revision/latest?cb=20220311062030"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-08-kamisato-ayaka-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_08_Kamisato_Ayaka_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_08_Kamisato_Ayaka_2.png",
+    "character": "Kamisato Ayaka",
+    "set": "Paimon's Paintings Set 08",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7b/Icon_Emoji_Paimon%27s_Paintings_08_Kamisato_Ayaka_2.png/revision/latest?cb=20220311062133"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-09-raiden-shogun-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_09_Raiden_Shogun_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_09_Raiden_Shogun_1.png",
+    "character": "Raiden Shogun",
+    "set": "Paimon's Paintings Set 09",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c8/Icon_Emoji_Paimon%27s_Paintings_09_Raiden_Shogun_1.png/revision/latest?cb=20261004154058"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-09-raiden-shogun-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_09_Raiden_Shogun_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_09_Raiden_Shogun_2.png",
+    "character": "Raiden Shogun",
+    "set": "Paimon's Paintings Set 09",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a6/Icon_Emoji_Paimon%27s_Paintings_09_Raiden_Shogun_2.png/revision/latest?cb=20211118214313"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-19-nahida-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_19_Nahida_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_19_Nahida_2.png",
+    "character": "Nahida",
+    "set": "Paimon's Paintings Set 19",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d1/Icon_Emoji_Paimon%27s_Paintings_19_Nahida_2.png/revision/latest?cb=20221124043003"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-19-nahida-3",
+    "filename": "Icon_Emoji_Paimons_Paintings_19_Nahida_3.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_19_Nahida_3.png",
+    "character": "Nahida",
+    "set": "Paimon's Paintings Set 19",
+    "variant": "3",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e4/Icon_Emoji_Paimon%27s_Paintings_19_Nahida_3.png/revision/latest?cb=20221124043005"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-26-furina-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_26_Furina_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_26_Furina_1.png",
+    "character": "Furina",
+    "set": "Paimon's Paintings Set 26",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/9e/Icon_Emoji_Paimon%27s_Paintings_26_Furina_1.png/revision/latest?cb=20230824043518"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-26-neuvillette-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_26_Neuvillette_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_26_Neuvillette_1.png",
+    "character": "Neuvillette",
+    "set": "Paimon's Paintings Set 26",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/9e/Icon_Emoji_Paimon%27s_Paintings_26_Neuvillette_1.png/revision/latest?cb=20261004161904"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-27-neuvillette-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_27_Neuvillette_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_27_Neuvillette_1.png",
+    "character": "Neuvillette",
+    "set": "Paimon's Paintings Set 27",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/68/Icon_Emoji_Paimon%27s_Paintings_27_Neuvillette_1.png/revision/latest?cb=20231019082629"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-28-furina-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_28_Furina_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_28_Furina_1.png",
+    "character": "Furina",
+    "set": "Paimon's Paintings Set 28",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/43/Icon_Emoji_Paimon%27s_Paintings_28_Furina_1.png/revision/latest?cb=20231118042306"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-01-aether-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_01_Aether_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_01_Aether_1.png",
+    "character": "Aether",
+    "set": "Paimon's Paintings Set 01",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/0e/Icon_Emoji_Paimon%27s_Paintings_01_Aether_1.png/revision/latest?cb=20240303141154"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-01-aether-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_01_Aether_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_01_Aether_2.png",
+    "character": "Aether",
+    "set": "Paimon's Paintings Set 01",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/48/Icon_Emoji_Paimon%27s_Paintings_01_Aether_2.png/revision/latest?cb=20240303141212"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-01-lumine-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_01_Lumine_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_01_Lumine_1.png",
+    "character": "Lumine",
+    "set": "Paimon's Paintings Set 01",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/96/Icon_Emoji_Paimon%27s_Paintings_01_Lumine_1.png/revision/latest?cb=20240303112329"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-01-lumine-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_01_Lumine_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_01_Lumine_2.png",
+    "character": "Lumine",
+    "set": "Paimon's Paintings Set 01",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/2d/Icon_Emoji_Paimon%27s_Paintings_01_Lumine_2.png/revision/latest?cb=20240303141251"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-01-paimon-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_01_Paimon_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_01_Paimon_2.png",
+    "character": "Paimon",
+    "set": "Paimon's Paintings Set 01",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/5/55/Icon_Emoji_Paimon%27s_Paintings_01_Paimon_2.png/revision/latest?cb=20240303140740"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-02-keqing-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_02_Keqing_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_02_Keqing_1.png",
+    "character": "Keqing",
+    "set": "Paimon's Paintings Set 02",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a1/Icon_Emoji_Paimon%27s_Paintings_02_Keqing_1.png/revision/latest?cb=20240303114515"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-02-keqing-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_02_Keqing_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_02_Keqing_2.png",
+    "character": "Keqing",
+    "set": "Paimon's Paintings Set 02",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/6c/Icon_Emoji_Paimon%27s_Paintings_02_Keqing_2.png/revision/latest?cb=20240303114527"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-02-mona-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_02_Mona_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_02_Mona_1.png",
+    "character": "Mona",
+    "set": "Paimon's Paintings Set 02",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/44/Icon_Emoji_Paimon%27s_Paintings_02_Mona_1.png/revision/latest?cb=20240303114442"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-02-mona-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_02_Mona_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_02_Mona_2.png",
+    "character": "Mona",
+    "set": "Paimon's Paintings Set 02",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/03/Icon_Emoji_Paimon%27s_Paintings_02_Mona_2.png/revision/latest?cb=20240303114432"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-03-tartaglia-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_03_Tartaglia_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_03_Tartaglia_1.png",
+    "character": "Tartaglia",
+    "set": "Paimon's Paintings Set 03",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/5/5d/Icon_Emoji_Paimon%27s_Paintings_03_Tartaglia_1.png/revision/latest?cb=20240303142118"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-03-tartaglia-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_03_Tartaglia_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_03_Tartaglia_2.png",
+    "character": "Tartaglia",
+    "set": "Paimon's Paintings Set 03",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/bb/Icon_Emoji_Paimon%27s_Paintings_03_Tartaglia_2.png/revision/latest?cb=20240303142142"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-04-albedo-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_04_Albedo_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_04_Albedo_1.png",
+    "character": "Albedo",
+    "set": "Paimon's Paintings Set 04",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c9/Icon_Emoji_Paimon%27s_Paintings_04_Albedo_1.png/revision/latest?cb=20210906044019"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-04-albedo-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_04_Albedo_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_04_Albedo_2.png",
+    "character": "Albedo",
+    "set": "Paimon's Paintings Set 04",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/2b/Icon_Emoji_Paimon%27s_Paintings_04_Albedo_2.png/revision/latest?cb=20210906044021"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-12-shenhe-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_12_Shenhe_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_12_Shenhe_1.png",
+    "character": "Shenhe",
+    "set": "Paimon's Paintings Set 12",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7f/Icon_Emoji_Paimon%27s_Paintings_12_Shenhe_1.png/revision/latest?cb=20220128144748"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-12-shenhe-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_12_Shenhe_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_12_Shenhe_2.png",
+    "character": "Shenhe",
+    "set": "Paimon's Paintings Set 12",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7b/Icon_Emoji_Paimon%27s_Paintings_12_Shenhe_2.png/revision/latest?cb=20220128144750"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-15-yelan-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_15_Yelan_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_15_Yelan_1.png",
+    "character": "Yelan",
+    "set": "Paimon's Paintings Set 15",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/1f/Icon_Emoji_Paimon%27s_Paintings_15_Yelan_1.png/revision/latest?cb=20220624043956"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-15-yelan-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_15_Yelan_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_15_Yelan_2.png",
+    "character": "Yelan",
+    "set": "Paimon's Paintings Set 15",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/1f/Icon_Emoji_Paimon%27s_Paintings_15_Yelan_2.png/revision/latest?cb=20220624043958"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-17-tighnari-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_17_Tighnari_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_17_Tighnari_1.png",
+    "character": "Tighnari",
+    "set": "Paimon's Paintings Set 17",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/5/5e/Icon_Emoji_Paimon%27s_Paintings_17_Tighnari_1.png/revision/latest?cb=20220921015820"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-17-tighnari-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_17_Tighnari_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_17_Tighnari_2.png",
+    "character": "Tighnari",
+    "set": "Paimon's Paintings Set 17",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/ad/Icon_Emoji_Paimon%27s_Paintings_17_Tighnari_2.png/revision/latest?cb=20220921015818"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-20-wanderer-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_20_Wanderer_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_20_Wanderer_1.png",
+    "character": "Wanderer",
+    "set": "Paimon's Paintings Set 20",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/b/b2/Icon_Emoji_Paimon%27s_Paintings_20_Wanderer_1.png/revision/latest?cb=20221216070034"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-20-wanderer-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_20_Wanderer_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_20_Wanderer_2.png",
+    "character": "Wanderer",
+    "set": "Paimon's Paintings Set 20",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a6/Icon_Emoji_Paimon%27s_Paintings_20_Wanderer_2.png/revision/latest?cb=20221216070013"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-26-navia-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_26_Navia_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_26_Navia_1.png",
+    "character": "Navia",
+    "set": "Paimon's Paintings Set 26",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/03/Icon_Emoji_Paimon%27s_Paintings_26_Navia_1.png/revision/latest?cb=20230824043600"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-28-arlecchino-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_28_Arlecchino_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_28_Arlecchino_1.png",
+    "character": "Arlecchino",
+    "set": "Paimon's Paintings Set 28",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/7a/Icon_Emoji_Paimon%27s_Paintings_28_Arlecchino_1.png/revision/latest?cb=20231118042351"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-28-navia-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_28_Navia_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_28_Navia_1.png",
+    "character": "Navia",
+    "set": "Paimon's Paintings Set 28",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Icon_Emoji_Paimon%27s_Paintings_28_Navia_1.png/revision/latest?cb=20231118042333"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-32-arlecchino-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_32_Arlecchino_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_32_Arlecchino_1.png",
+    "character": "Arlecchino",
+    "set": "Paimon's Paintings Set 32",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/4e/Icon_Emoji_Paimon%27s_Paintings_32_Arlecchino_1.png/revision/latest?cb=20240514042831"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-08-yoimiya-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_08_Yoimiya_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_08_Yoimiya_1.png",
+    "character": "Yoimiya",
+    "set": "Paimon's Paintings Set 08",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/6e/Icon_Emoji_Paimon%27s_Paintings_08_Yoimiya_1.png/revision/latest?cb=20220311062318"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-08-yoimiya-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_08_Yoimiya_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_08_Yoimiya_2.png",
+    "character": "Yoimiya",
+    "set": "Paimon's Paintings Set 08",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/ab/Icon_Emoji_Paimon%27s_Paintings_08_Yoimiya_2.png/revision/latest?cb=20220311062408"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-13-raiden-shogun-4",
+    "filename": "Icon_Emoji_Paimons_Paintings_13_Raiden_Shogun_4.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_13_Raiden_Shogun_4.png",
+    "character": "Raiden Shogun",
+    "set": "Paimon's Paintings Set 13",
+    "variant": "4",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/6b/Icon_Emoji_Paimon%27s_Paintings_13_Raiden_Shogun_4.png/revision/latest?cb=20220610190459"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-13-yae-miko-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_13_Yae_Miko_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_13_Yae_Miko_1.png",
+    "character": "Yae Miko",
+    "set": "Paimon's Paintings Set 13",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a6/Icon_Emoji_Paimon%27s_Paintings_13_Yae_Miko_1.png/revision/latest?cb=20220311050854"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-13-yae-miko-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_13_Yae_Miko_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_13_Yae_Miko_2.png",
+    "character": "Yae Miko",
+    "set": "Paimon's Paintings Set 13",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/3/37/Icon_Emoji_Paimon%27s_Paintings_13_Yae_Miko_2.png/revision/latest?cb=20220311051001"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-16-yoimiya-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_16_Yoimiya_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_16_Yoimiya_2.png",
+    "character": "Yoimiya",
+    "set": "Paimon's Paintings Set 16",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/69/Icon_Emoji_Paimon%27s_Paintings_16_Yoimiya_2.png/revision/latest?cb=20220812043359"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-23-kaveh-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_23_Kaveh_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_23_Kaveh_2.png",
+    "character": "Kaveh",
+    "set": "Paimon's Paintings Set 23",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d0/Icon_Emoji_Paimon%27s_Paintings_23_Kaveh_2.png/revision/latest?cb=20230506194051"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-24-raiden-shogun-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_24_Raiden_Shogun_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_24_Raiden_Shogun_1.png",
+    "character": "Raiden Shogun",
+    "set": "Paimon's Paintings Set 24",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/06/Icon_Emoji_Paimon%27s_Paintings_24_Raiden_Shogun_1.png/revision/latest?cb=20230528042551"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-26-lynette-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_26_Lynette_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_26_Lynette_1.png",
+    "character": "Lynette",
+    "set": "Paimon's Paintings Set 26",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/1d/Icon_Emoji_Paimon%27s_Paintings_26_Lynette_1.png/revision/latest?cb=20230824043538"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-26-lynette-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_26_Lynette_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_26_Lynette_2.png",
+    "character": "Lynette",
+    "set": "Paimon's Paintings Set 26",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/ef/Icon_Emoji_Paimon%27s_Paintings_26_Lynette_2.png/revision/latest?cb=20230824043532"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-26-lyney-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_26_Lyney_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_26_Lyney_1.png",
+    "character": "Lyney",
+    "set": "Paimon's Paintings Set 26",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/5/54/Icon_Emoji_Paimon%27s_Paintings_26_Lyney_1.png/revision/latest?cb=20261004161522"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-26-lyney-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_26_Lyney_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_26_Lyney_2.png",
+    "character": "Lyney",
+    "set": "Paimon's Paintings Set 26",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/ac/Icon_Emoji_Paimon%27s_Paintings_26_Lyney_2.png/revision/latest?cb=20230824043547"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-27-hu-tao-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_27_Hu_Tao_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_27_Hu_Tao_1.png",
+    "character": "Hu Tao",
+    "set": "Paimon's Paintings Set 27",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/90/Icon_Emoji_Paimon%27s_Paintings_27_Hu_Tao_1.png/revision/latest?cb=20231019083826"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-27-neuvillette-3",
+    "filename": "Icon_Emoji_Paimons_Paintings_27_Neuvillette_3.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_27_Neuvillette_3.png",
+    "character": "Neuvillette",
+    "set": "Paimon's Paintings Set 27",
+    "variant": "3",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/0/02/Icon_Emoji_Paimon%27s_Paintings_27_Neuvillette_3.png/revision/latest?cb=20231019083005"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-28-lynette-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_28_Lynette_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_28_Lynette_1.png",
+    "character": "Lynette",
+    "set": "Paimon's Paintings Set 28",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a2/Icon_Emoji_Paimon%27s_Paintings_28_Lynette_1.png/revision/latest?cb=20261004161357"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-29-chevreuse-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_29_Chevreuse_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_29_Chevreuse_1.png",
+    "character": "Chevreuse",
+    "set": "Paimon's Paintings Set 29",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/8/8d/Icon_Emoji_Paimon%27s_Paintings_29_Chevreuse_1.png/revision/latest?cb=20231228163907"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-31-chiori-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_31_Chiori_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_31_Chiori_1.png",
+    "character": "Chiori",
+    "set": "Paimon's Paintings Set 31",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/e/e8/Icon_Emoji_Paimon%27s_Paintings_31_Chiori_1.png/revision/latest?cb=20261004163408"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-31-chiori-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_31_Chiori_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_31_Chiori_2.png",
+    "character": "Chiori",
+    "set": "Paimon's Paintings Set 31",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/f/f8/Icon_Emoji_Paimon%27s_Paintings_31_Chiori_2.png/revision/latest?cb=20240412042916"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-38-xiangling-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_38_Xiangling_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_38_Xiangling_2.png",
+    "character": "Xiangling",
+    "set": "Paimon's Paintings Set 38",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/63/Icon_Emoji_Paimon%27s_Paintings_38_Xiangling_2.png/revision/latest?cb=20250128140314"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-41-escoffier-4",
+    "filename": "Icon_Emoji_Paimons_Paintings_41_Escoffier_4.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_41_Escoffier_4.png",
+    "character": "Escoffier",
+    "set": "Paimon's Paintings Set 41",
+    "variant": "4",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a7/Icon_Emoji_Paimon%27s_Paintings_41_Escoffier_4.png/revision/latest?cb=20261004165206"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-42-skirk-3",
+    "filename": "Icon_Emoji_Paimons_Paintings_42_Skirk_3.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_42_Skirk_3.png",
+    "character": "Skirk",
+    "set": "Paimon's Paintings Set 42",
+    "variant": "3",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/9/98/Icon_Emoji_Paimon%27s_Paintings_42_Skirk_3.png/revision/latest?cb=20250816014623"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-43-lauma-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_43_Lauma_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_43_Lauma_1.png",
+    "character": "Lauma",
+    "set": "Paimon's Paintings Set 43",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/64/Icon_Emoji_Paimon%27s_Paintings_43_Lauma_1.png/revision/latest?cb=20250910210211"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-44-nefer-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_44_Nefer_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_44_Nefer_1.png",
+    "character": "Nefer",
+    "set": "Paimon's Paintings Set 44",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/2/2e/Icon_Emoji_Paimon%27s_Paintings_44_Nefer_1.png/revision/latest?cb=20251030020504"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-48-mika-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_48_Mika_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_48_Mika_1.png",
+    "character": "Mika",
+    "set": "Paimon's Paintings Set 48",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/cf/Icon_Emoji_Paimon%27s_Paintings_48_Mika_1.png/revision/latest?cb=20260411033833"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-49-nefer",
+    "filename": "Icon_Emoji_Paimons_Paintings_49_Nefer.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_49_Nefer.png",
+    "character": "Character",
+    "set": "Paimon's Paintings Set 00",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c7/Icon_Emoji_Paimon%27s_Paintings_49_Nefer.png/revision/latest?cb=20261004165935"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-06-azhdaha-3",
+    "filename": "Icon_Emoji_Paimons_Paintings_06_Azhdaha_3.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_06_Azhdaha_3.png",
+    "character": "Azhdaha",
+    "set": "Paimon's Paintings Set 06",
+    "variant": "3",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c9/Icon_Emoji_Paimon%27s_Paintings_06_Azhdaha_3.png/revision/latest?cb=20240303142829"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-10-tartaglia-2",
+    "filename": "Icon_Emoji_Paimons_Paintings_10_Tartaglia_2.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_10_Tartaglia_2.png",
+    "character": "Tartaglia",
+    "set": "Paimon's Paintings Set 10",
+    "variant": "2",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/7/74/Icon_Emoji_Paimon%27s_Paintings_10_Tartaglia_2.png/revision/latest?cb=20211118233640"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-25-oceanid-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_25_Oceanid_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_25_Oceanid_1.png",
+    "character": "Oceanid",
+    "set": "Paimon's Paintings Set 25",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/d2/Icon_Emoji_Paimon%27s_Paintings_25_Oceanid_1.png/revision/latest?cb=20230717042518"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-27-wriothesley-4",
+    "filename": "Icon_Emoji_Paimons_Paintings_27_Wriothesley_4.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_27_Wriothesley_4.png",
+    "character": "Wriothesley",
+    "set": "Paimon's Paintings Set 27",
+    "variant": "4",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/1/1b/Icon_Emoji_Paimon%27s_Paintings_27_Wriothesley_4.png/revision/latest?cb=20231019083713"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-29-kamisato-ayato-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_29_Kamisato_Ayato_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_29_Kamisato_Ayato_1.png",
+    "character": "Kamisato Ayato",
+    "set": "Paimon's Paintings Set 29",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/c/c6/Icon_Emoji_Paimon%27s_Paintings_29_Kamisato_Ayato_1.png/revision/latest?cb=20231228162918"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-31-albedo-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_31_Albedo_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_31_Albedo_1.png",
+    "character": "Albedo",
+    "set": "Paimon's Paintings Set 31",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a6/Icon_Emoji_Paimon%27s_Paintings_31_Albedo_1.png/revision/latest?cb=20240412042307"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-37-chasca-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_37_Chasca_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_37_Chasca_1.png",
+    "character": "Chasca",
+    "set": "Paimon's Paintings Set 37",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/6/6b/Icon_Emoji_Paimon%27s_Paintings_37_Chasca_1.png/revision/latest?cb=20261004164618"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-46-jahoda-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_46_Jahoda_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_46_Jahoda_1.png",
+    "character": "Jahoda",
+    "set": "Paimon's Paintings Set 46",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/4/4a/Icon_Emoji_Paimon%27s_Paintings_46_Jahoda_1.png/revision/latest?cb=20260117142107"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-47-columbina-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_47_Columbina_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_47_Columbina_1.png",
+    "character": "Columbina",
+    "set": "Paimon's Paintings Set 47",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/a/a8/Icon_Emoji_Paimon%27s_Paintings_47_Columbina_1.png/revision/latest?cb=20260120104714"
+  },
+  {
+    "id": "icon-emoji-paimons-paintings-48-nicole-1",
+    "filename": "Icon_Emoji_Paimons_Paintings_48_Nicole_1.png",
+    "path": "/images/chat-emojis/Icon_Emoji_Paimons_Paintings_48_Nicole_1.png",
+    "character": "Nicole",
+    "set": "Paimon's Paintings Set 48",
+    "variant": "1",
+    "sourceUrl": "https://static.wikia.nocookie.net/gensin-impact/images/d/df/Icon_Emoji_Paimon%27s_Paintings_48_Nicole_1.png/revision/latest?cb=20260411033858"
+  }
+]

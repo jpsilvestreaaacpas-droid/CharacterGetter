@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { ThemeProvider } from "@/components/theme-provider";
+import { BackgroundProvider } from "@/components/theme/background-context";
+import { ChatEmojiProvider } from "@/components/theme/chat-emoji-context";
 import "@/styles/globals.css";
 
 export const metadata: Metadata = {
@@ -21,7 +23,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          {children}
+          <BackgroundProvider>
+            <ChatEmojiProvider>
+              {children}
+            </ChatEmojiProvider>
+          </BackgroundProvider>
         </ThemeProvider>
       </body>
     </html>
