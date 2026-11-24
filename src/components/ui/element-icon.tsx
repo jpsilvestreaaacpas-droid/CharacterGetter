@@ -3,7 +3,6 @@
  * Uses official elemental icons from /images/elements/ (sourced via Fandom wiki).
  * © miHoYo / HoYoverse. Used for non-commercial fan purposes.
  */
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export type GenshinElement =
@@ -76,14 +75,15 @@ export function ElementIcon({
   }
 
   const content = (
-    <Image
+    <img
       src={config.icon}
       alt={`${config.label} element`}
       title={config.label}
       width={px}
       height={px}
+      loading="lazy"
+      decoding="async"
       className={cn("object-contain shrink-0", cls)}
-      unoptimized
     />
   );
 

@@ -1,16 +1,16 @@
-import { describe, it, expect, vi } from "vitest";
+import { describe, it, expect } from "vitest";
 import React from "react";
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 import { Sidebar, NAV_ITEMS } from "@/components/layout/sidebar";
 
-// Mock next/navigation
-vi.mock("next/navigation", () => ({
-  usePathname: () => "/dashboard",
-}));
+function renderWithRouter(ui: React.ReactElement, initialPath = "/dashboard") {
+  return render(<MemoryRouter initialEntries={[initialPath]}>{ui}</MemoryRouter>);
+}
 
 describe("Application Shell & Navigation", () => {
   it("renders all seven milestone routes in the sidebar", () => {
-    render(<Sidebar />);
+    renderWithRouter(<Sidebar />);
 
     expect(screen.getByText("Dashboard")).toBeInTheDocument();
     expect(screen.getByText("Characters")).toBeInTheDocument();
@@ -23,10 +23,11 @@ describe("Application Shell & Navigation", () => {
   });
 
   it("contains exact href paths for all navigation links", () => {
-    render(<Sidebar />);
+    renderWithRouter(<Sidebar />);
 
     NAV_ITEMS.forEach((item) => {
       const link = screen.getByText(item.title).closest("a");
+      expect(link).not.toBeNull();
       expect(link).toHaveAttribute("href", item.href);
     });
   });

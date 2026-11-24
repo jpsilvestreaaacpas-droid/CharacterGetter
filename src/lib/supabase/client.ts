@@ -1,15 +1,17 @@
 import { createClient } from "@supabase/supabase-js";
 
 // Client for browser environments using publishable / anon keys
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://placeholder-project.supabase.co";
-const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY || "placeholder-anon-key";
+// In Vite, use import.meta.env.VITE_* instead of process.env.NEXT_PUBLIC_*
+const supabaseUrl =
+  (import.meta.env as Record<string, string>)["VITE_SUPABASE_URL"] ??
+  "https://placeholder-project.supabase.co";
+const supabaseAnonKey =
+  (import.meta.env as Record<string, string>)["VITE_SUPABASE_ANON_KEY"] ??
+  "placeholder-anon-key";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export function isSupabaseConfigured(): boolean {
-  return (
-    Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL) &&
-    Boolean(process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) &&
-    process.env.NEXT_PUBLIC_SUPABASE_URL !== "https://placeholder-project.supabase.co"
-  );
+  const url = (import.meta.env as Record<string, string>)["VITE_SUPABASE_URL"];
+  return Boolean(url) && url !== "https://placeholder-project.supabase.co";
 }

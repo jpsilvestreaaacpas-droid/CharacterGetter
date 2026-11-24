@@ -1,5 +1,5 @@
 import * as React from "react";
-import Link from "next/link";
+import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/app-shell";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

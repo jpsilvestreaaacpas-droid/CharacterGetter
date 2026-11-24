@@ -1,8 +1,7 @@
 "use client";
 
 import * as React from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import {
   LayoutDashboard,
@@ -20,6 +19,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatEmojiImg } from "@/components/theme/chat-emoji-context";
+import { preloadRoute } from "@/App";
 
 export const NAV_ITEMS = [
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard, badge: null, slot: "sidebar_dashboard" as const },
@@ -33,7 +33,7 @@ export const NAV_ITEMS = [
 ];
 
 export function Sidebar({ className }: { className?: string }) {
-  const pathname = usePathname();
+  const { pathname } = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
   return (
@@ -89,7 +89,8 @@ export function Sidebar({ className }: { className?: string }) {
             return (
               <div key={item.href} className="relative group">
                 <Link
-                  href={item.href}
+                  to={item.href}
+                  onMouseEnter={() => preloadRoute(item.href)}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
                     "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all relative z-10",

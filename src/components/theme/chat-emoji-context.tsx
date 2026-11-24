@@ -1,7 +1,4 @@
-"use client";
-
 import * as React from "react";
-import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 export interface RemoteChatEmoji {
@@ -28,7 +25,66 @@ export type DecorationSlot =
   | "dashboard_recent";
 
 const STORAGE_KEY = "cg_chat_emoji_v2";
-const API_URL = "/api/chat-emojis";
+
+const FANDOM_API = "https://genshin-impact.fandom.com/api.php";
+const EMOJI_PATTERN = /^Icon_Emoji_Paimon(?:'s|s)_Paintings_\d+_[A-Za-z_]+_?\d*\.png$/;
+
+async function fetchEmojisDirect(): Promise<RemoteChatEmoji[]> {
+  try {
+    // Step 1: list image filenames from Chat/Gallery
+    const listParams = new URLSearchParams({
+      action: "query", titles: "Chat/Gallery",
+      prop: "images", imlimit: "500", format: "json", origin: "*",
+    });
+    const listRes = await fetch(`${FANDOM_API}?${listParams}`, {
+      headers: { "User-Agent": "CharacterGetter/1.0 (non-commercial fan companion)" },
+    });
+    if (!listRes.ok) return [];
+    const listData = await listRes.json();
+    const pages = listData?.query?.pages ?? {};
+    const filenames: string[] = [];
+    for (const pg of Object.values(pages) as { images?: { title: string }[] }[]) {
+      for (const img of pg.images ?? []) {
+        const name = img.title.replace("File:", "").replace(/\s/g, "_");
+        if (EMOJI_PATTERN.test(name)) filenames.push(name);
+      }
+    }
+    if (filenames.length === 0) return [];
+
+    // Step 2: resolve CDN URLs in batches of 25
+    const results: RemoteChatEmoji[] = [];
+    for (let i = 0; i < filenames.length; i += 25) {
+      const batch = filenames.slice(i, i + 25);
+      const titles = batch.map((f) => `File:${f.replace(/_/g, " ")}`).join("|");
+      const infoParams = new URLSearchParams({
+        action: "query", titles, prop: "imageinfo",
+        iiprop: "url", format: "json", origin: "*",
+      });
+      try {
+        const infoRes = await fetch(`${FANDOM_API}?${infoParams}`, {
+          headers: { "User-Agent": "CharacterGetter/1.0 (non-commercial fan companion)" },
+        });
+        if (!infoRes.ok) continue;
+        const infoData = await infoRes.json();
+        for (const pg of Object.values(infoData?.query?.pages ?? {}) as { title: string; imageinfo?: { url: string }[] }[]) {
+          const url = pg.imageinfo?.[0]?.url;
+          if (!url) continue;
+          const filename = pg.title.replace("File:", "").replace(/\s/g, "_").replace(/'/g, "s");
+          const match = filename.match(/Icon_Emoji_Paimons_Paintings_(\d+)_([A-Za-z_]+?)_?(\d+)?\.png/);
+          results.push({
+            filename,
+            url,
+            character: match?.[2]?.replace(/_/g, " ") ?? "Unknown",
+            set: `Paimon's Paintings Set ${match?.[1] ?? "00"}`,
+          });
+        }
+      } catch { /* skip failed batch */ }
+    }
+    return results;
+  } catch {
+    return [];
+  }
+}
 
 interface ChatEmojiState {
   emojis: RemoteChatEmoji[];
@@ -102,10 +158,7 @@ export function ChatEmojiProvider({ children }: { children: React.ReactNode }) {
   const fetchEmojis = React.useCallback(async () => {
     setState((s) => ({ ...s, status: "loading" }));
     try {
-      const res = await fetch(API_URL, { next: { revalidate: 3600 } } as RequestInit);
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = (await res.json()) as { emojis: RemoteChatEmoji[] };
-      const emojis = data.emojis ?? [];
+      const emojis = await fetchEmojisDirect();
 
       // Try to restore saved assignments; validate filenames still exist
       const saved = loadAssignments();
@@ -235,7 +288,6 @@ export function ChatEmojiImg({
       )}
       style={{ width: size, height: size }}
     >
-      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src={emoji.url}
         alt={alt ?? `${emoji.character} chat emoji`}
@@ -244,6 +296,7 @@ export function ChatEmojiImg({
         height={size}
         className="w-full h-full object-contain drop-shadow-md"
         loading="lazy"
+        decoding="async"
         onError={(e) => {
           // Hide broken images gracefully
           (e.currentTarget as HTMLImageElement).style.display = "none";
