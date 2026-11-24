@@ -5,15 +5,15 @@ import { ElementIcon, getElementColor, getElementBg } from "@/components/ui/elem
 
 describe("ElementIcon", () => {
   it("renders correctly for anemo", () => {
-    const { container } = render(<ElementIcon element="anemo" alt="Anemo element" />);
-    const img = screen.getByAltText("Anemo element");
+    const { container } = render(<ElementIcon element="anemo" />);
+    const img = screen.getByRole("img", { name: "Anemo element" });
     expect(img).toBeInTheDocument();
     expect(img).toHaveAttribute("src", "/images/elements/anemo.png");
   });
 
   it("handles case-insensitive element names", () => {
-    render(<ElementIcon element="Pyro" alt="Pyro element" />);
-    const img = screen.getByAltText("Pyro element");
+    render(<ElementIcon element="Pyro" />);
+    const img = screen.getByRole("img", { name: "Pyro element" });
     expect(img).toHaveAttribute("src", "/images/elements/pyro.png");
   });
 

@@ -62,13 +62,13 @@ export default function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-2.5 shrink-0">
-          <Link href="/pull-planner">
+          <Link to="/pull-planner">
             <Button className="bg-gradient-to-r from-amber-400 via-gold-500 to-yellow-500 text-stone-950 font-bold hover:brightness-110 shadow-[0_0_15px_rgba(245,158,11,0.35)] text-xs h-8 px-3.5 gap-1.5">
               <Sparkles className="w-3.5 h-3.5 fill-current" />
               Pull Planner
             </Button>
           </Link>
-          <Link href="/characters">
+          <Link to="/characters">
             <Button variant="outline" className="border-white/20 bg-white/5 hover:bg-white/10 text-foreground font-medium text-xs h-8 px-3.5 gap-1.5 backdrop-blur-md">
               <Users className="w-3.5 h-3.5" />
               View Roster
@@ -291,7 +291,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <Link href="/progression" className="block pt-2">
+          <Link to="/progression" className="block pt-2">
             <Button variant="outline" size="sm" className="w-full text-xs border-amber-500/30 hover:bg-amber-500/10 text-amber-300 font-semibold h-8">
               Open Progression Planner
             </Button>
@@ -308,7 +308,7 @@ export default function DashboardPage() {
           </div>
           <div className="flex items-center gap-2">
             <ChatEmojiImg slot="dashboard_recent" size={28} animate={false} className="opacity-80" />
-            <Link href="/characters">
+            <Link to="/characters">
               <Button variant="ghost" size="sm" className="text-xs text-amber-400 hover:text-amber-300 gap-1 h-7 px-2">
                 View All ({characters.length})
                 <ArrowRight className="w-3.5 h-3.5" />

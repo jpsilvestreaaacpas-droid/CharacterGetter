@@ -294,7 +294,7 @@ export default function PullPlannerPage() {
                         </p>
                       </div>
                     </div>
-                    <Link href="/banner-radar">
+                    <Link to="/banner-radar">
                       <Button variant="outline" size="sm" className="text-xs gap-1">
                         Radar Details
                         <ChevronRight className="w-3.5 h-3.5" />
