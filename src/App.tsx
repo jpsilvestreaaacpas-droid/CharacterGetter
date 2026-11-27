@@ -24,6 +24,7 @@ const PullPlannerPage = lazy(() => import("@/app/pull-planner/page"));
 const BannerRadarPage = lazy(() => import("@/app/banner-radar/page"));
 const ResourcesPage = lazy(() => import("@/app/resources/page"));
 const ProgressionPage = lazy(() => import("@/app/progression/page"));
+const WeaponsPage = lazy(() => import("@/app/weapons/page"));
 const TeamsPage = lazy(() => import("@/app/teams/page"));
 const SettingsPage = lazy(() => import("@/app/settings/page"));
 const NotFoundPage = lazy(() => import("@/app/not-found"));
@@ -52,7 +53,7 @@ function PageSkeletonLoader() {
         <div className="w-6 h-6 rounded-md bg-gold-500/40" />
       </div>
       <p className="text-xs font-serif italic text-gold-400 animate-pulse">
-        Channeling celestial stars…
+        Travelling into the world of teyvat…
       </p>
     </div>
   );
@@ -109,6 +110,7 @@ export default function App() {
                   <Route path="/banner-radar" element={<BannerRadarPage />} />
                   <Route path="/resources" element={<ResourcesPage />} />
                   <Route path="/progression" element={<ProgressionPage />} />
+                  <Route path="/weapons" element={<WeaponsPage />} />
                   <Route path="/teams" element={<TeamsPage />} />
                   <Route path="/settings" element={<SettingsPage />} />
                   <Route path="*" element={<NotFoundPage />} />

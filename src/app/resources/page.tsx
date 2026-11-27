@@ -11,6 +11,8 @@ import {
   TrendingUp, Minus, Plus, RefreshCw, AlertCircle,
 } from "lucide-react";
 import { RESOURCE_CATALOGUE, ResourceDefinition } from "@/lib/data/resources";
+import { usePlayerResources } from "@/lib/hooks/use-local-player";
+import { Pagination } from "@/components/ui/pagination";
 
 // Demo resource quantities (M2 uses live DB in future; here we show interactive client state)
 type ResourceEntry = ResourceDefinition & { quantity: number; target: number };
@@ -51,16 +53,32 @@ const DEMO_QUANTITIES: Record<string, { quantity: number; target: number }> = {
   "shadow-of-the-warrior": { quantity: 2, target: 4 },
 };
 
+const PAGE_SIZE = 9;
+// Categories that get paginated ("all" is the All tab)
+const PAGINATED = new Set(["all", "talent_book", "talent_boss", "boss_material"]);
+
 export default function ResourcesPage() {
-  const [resources, setResources] = React.useState<ResourceEntry[]>(() =>
-    RESOURCE_CATALOGUE.map((r) => ({
-      ...r,
-      quantity: DEMO_QUANTITIES[r.id]?.quantity ?? 0,
-      target: DEMO_QUANTITIES[r.id]?.target ?? 0,
-    }))
-  );
+  const { resources: storedResources, upsertResource } = usePlayerResources();
+
+  const resources: ResourceEntry[] = React.useMemo(() => {
+    const byId = new Map(storedResources.map((r) => [r.itemId, r]));
+    return RESOURCE_CATALOGUE.map((r) => {
+      const saved = byId.get(r.id);
+      return {
+        ...r,
+        quantity: saved?.quantity ?? 0,
+        target: saved?.targetQuantity ?? 0,
+      };
+    });
+  }, [storedResources]);
+
   const [filter, setFilter] = React.useState("");
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
+  const [page, setPage] = React.useState(0);
+
+  React.useEffect(() => {
+    setPage(0);
+  }, [filter, activeCategory]);
 
   const categories = ["all", ...Array.from(new Set(RESOURCE_CATALOGUE.map((r) => r.category)))];
 
@@ -70,16 +88,37 @@ export default function ResourcesPage() {
     return matchCat && matchSearch;
   });
 
+  const paginate = PAGINATED.has(activeCategory);
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(page, totalPages - 1);
+  const visible = paginate
+    ? filtered.slice(safePage * PAGE_SIZE, (safePage + 1) * PAGE_SIZE)
+    : filtered;
+
   function adjust(id: string, delta: number) {
-    setResources((prev) =>
-      prev.map((r) => r.id === id ? { ...r, quantity: Math.max(0, r.quantity + delta) } : r)
-    );
+    const item = resources.find((r) => r.id === id);
+    if (!item) return;
+    const nextQty = Math.max(0, item.quantity + delta);
+    upsertResource({
+      itemId: item.id,
+      name: item.name,
+      category: item.category,
+      quantity: nextQty,
+      targetQuantity: item.target,
+    }).catch(console.error);
   }
 
   function setQuantity(id: string, val: number) {
-    setResources((prev) =>
-      prev.map((r) => r.id === id ? { ...r, quantity: Math.max(0, val) } : r)
-    );
+    const item = resources.find((r) => r.id === id);
+    if (!item || !Number.isFinite(val)) return;
+    const nextQty = Math.max(0, Math.floor(val));
+    upsertResource({
+      itemId: item.id,
+      name: item.name,
+      category: item.category,
+      quantity: nextQty,
+      targetQuantity: item.target,
+    }).catch(console.error);
   }
 
   const totalMora = resources.find((r) => r.id === "mora")?.quantity ?? 0;
@@ -146,11 +185,10 @@ export default function ResourcesPage() {
             <button
               key={cat}
               onClick={() => setActiveCategory(cat)}
-              className={`text-xs px-2.5 py-1 rounded border transition-colors ${
-                activeCategory === cat
-                  ? "bg-gold-500/20 text-gold-600 dark:text-gold-400 border-gold-500/40"
-                  : "bg-muted/40 text-muted-foreground border-border/60 hover:border-border"
-              }`}
+              className={`text-xs px-2.5 py-1 rounded border transition-colors ${activeCategory === cat
+                ? "bg-gold-500/20 text-gold-600 dark:text-gold-400 border-gold-500/40"
+                : "bg-muted/40 text-muted-foreground border-border/60 hover:border-border"
+                }`}
             >
               {cat === "all" ? "All" : CATEGORY_LABELS[cat] ?? cat}
             </button>
@@ -160,7 +198,7 @@ export default function ResourcesPage() {
 
       {/* Resource Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-        {filtered.map((r) => {
+        {visible.map((r) => {
           const Icon = ICON_MAP[r.icon] ?? Package;
           const hasTarget = r.target > 0;
           const pct = hasTarget ? Math.min(100, Math.round((r.quantity / r.target) * 100)) : null;
@@ -230,7 +268,24 @@ export default function ResourcesPage() {
           );
         })}
       </div>
-
+      {paginate && totalPages > 1 && (
+        <div className="flex items-center justify-between gap-3 pt-2 text-xs text-muted-foreground">
+          <span>
+            {safePage * PAGE_SIZE + 1}–{Math.min((safePage + 1) * PAGE_SIZE, filtered.length)} of {filtered.length}
+          </span>
+          <div className="flex items-center gap-2">
+            <Button size="sm" variant="outline" disabled={safePage === 0} onClick={() => setPage(safePage - 1)}>
+              Prev
+            </Button>
+            <span>
+              Page {safePage + 1} / {totalPages}
+            </span>
+            <Button size="sm" variant="outline" disabled={safePage >= totalPages - 1} onClick={() => setPage(safePage + 1)}>
+              Next
+            </Button>
+          </div>
+        </div>
+      )}
       {filtered.length === 0 && (
         <div className="text-center py-16 text-muted-foreground text-sm">
           No resources match your search.

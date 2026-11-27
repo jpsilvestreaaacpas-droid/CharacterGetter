@@ -7,8 +7,15 @@ import { RegionalBackground } from "@/components/layout/regional-background";
 import { AlertCircle } from "lucide-react";
 
 export function AppShell({ children }: { children: React.ReactNode }) {
+  React.useEffect(() => {
+    const saved = localStorage.getItem("cg_display_scale");
+    if (saved) {
+      document.documentElement.style.setProperty("--app-display-scale", saved);
+    }
+  }, []);
+
   return (
-    <div className="min-h-screen w-full max-w-full bg-[#070d19] text-foreground flex relative overflow-x-hidden selection:bg-amber-500/25 selection:text-amber-200">
+    <div className="cg-base-scaled min-h-screen w-full max-w-full bg-[#070d19] text-foreground flex relative overflow-x-hidden selection:bg-amber-500/25 selection:text-amber-200">
       {/* Regional Landscape Artwork Background Layer */}
       <RegionalBackground />
 
@@ -36,7 +43,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
         <Header />
 
         {/* Page Content */}
-        <main className="flex-1 min-w-0 p-3 sm:p-5 lg:p-8 max-w-7xl w-full mx-auto space-y-5 sm:space-y-6">
+        <main className="flex-1 min-w-0 p-4 sm:p-6 lg:px-8 lg:py-6 max-w-[1600px] w-full mx-auto space-y-6">
           {children}
         </main>
       </div>

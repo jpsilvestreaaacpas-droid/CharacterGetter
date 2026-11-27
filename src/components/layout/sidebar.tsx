@@ -16,6 +16,7 @@ import {
   Menu,
   X,
   Star,
+  Sword,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ChatEmojiImg } from "@/components/theme/chat-emoji-context";
@@ -28,6 +29,7 @@ export const NAV_ITEMS = [
   { title: "Banner Radar", href: "/banner-radar", icon: CalendarHeart, badge: "New", slot: "sidebar_banner" as const },
   { title: "Resources", href: "/resources", icon: Package, badge: null, slot: "sidebar_resources" as const },
   { title: "Progression", href: "/progression", icon: TrendingUp, badge: null, slot: "sidebar_progression" as const },
+  { title: "Weapons", href: "/weapons", icon: Sword, badge: null, slot: "sidebar_resources" as const },
   { title: "Teams", href: "/teams", icon: UserRoundCog, badge: null, slot: "sidebar_teams" as const },
   { title: "Settings", href: "/settings", icon: Settings, badge: null, slot: "sidebar_settings" as const },
 ];

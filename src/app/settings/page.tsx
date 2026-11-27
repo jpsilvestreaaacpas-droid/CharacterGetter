@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { CommunityDatasetImportSchema } from "@/lib/data/schemas";
-import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw, User, Save, Image as ImageIcon, Shuffle } from "lucide-react";
+import { Settings, FileJson, CheckCircle2, AlertTriangle, RefreshCw, User, Save, Image as ImageIcon, Shuffle, Download, Upload } from "lucide-react";
+import { usePlayerProfile } from "@/lib/hooks/use-local-player";
+import { localPlayerRepo } from "@/lib/repositories/LocalPlayerRepository";
 import { Input } from "@/components/ui/input";
 import { useRegionalBackground, REGIONAL_BACKGROUNDS, RegionalBackgroundId } from "@/components/theme/background-context";
 import { useChatEmojis, ChatEmojiImg, DecorationSlot } from "@/components/theme/chat-emoji-context";
@@ -15,19 +17,60 @@ import { useChatEmojis, ChatEmojiImg, DecorationSlot } from "@/components/theme/
 export default function SettingsPage() {
   const { currentBackground, setBackground } = useRegionalBackground();
   const { shuffleAll, shuffleSlot, getSlot, assignments, status: emojiStatus, reload: reloadEmojis } = useChatEmojis();
+  const { profile: persistedProfile, saveProfile } = usePlayerProfile();
   const [profile, setProfile] = React.useState({
-    travelerName: "Lumine",
-    adventureRank: 58,
-    worldLevel: 8,
-    primogems: 14880,
-    intertwinedFates: 12,
-    signature: "Collecting stars across Teyvat ✨",
+    travelerName: "Traveler",
+    adventureRank: 1,
+    worldLevel: 0,
+    primogems: 0,
+    intertwinedFates: 0,
+    signature: "Exploring Teyvat",
   });
   const [saved, setSaved] = React.useState(false);
 
-  function handleSave() {
+  React.useEffect(() => {
+    if (persistedProfile) {
+      setProfile({
+        travelerName: persistedProfile.travelerName,
+        adventureRank: persistedProfile.adventureRank,
+        worldLevel: persistedProfile.worldLevel,
+        primogems: persistedProfile.primogems,
+        intertwinedFates: persistedProfile.intertwinedFates,
+        signature: persistedProfile.signature ?? "",
+      });
+    }
+  }, [persistedProfile]);
+
+  async function handleSave() {
+    await saveProfile(profile);
     setSaved(true);
     setTimeout(() => setSaved(false), 2000);
+  }
+
+  async function handleExportBackup() {
+    const json = await localPlayerRepo.exportAllData();
+    const blob = new Blob([json], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `character-getter-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  async function handleImportBackup(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const text = await file.text();
+      await localPlayerRepo.importAllData(text);
+      setImportStatus({ state: "success", message: "Local player backup restored successfully!" });
+    } catch (err) {
+      setImportStatus({
+        state: "error",
+        message: err instanceof Error ? err.message : "Failed to restore backup",
+      });
+    }
   }
 
   const [importStatus, setImportStatus] = React.useState<{
@@ -413,6 +456,62 @@ export default function SettingsPage() {
                   <span>{importStatus.message}</span>
                 </div>
               )}
+            </CardContent>
+          </Card>
+
+          {/* Local Player Backup & Restore */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <FileJson className="w-5 h-5 text-primary" />
+                Local Player Backup (IndexedDB)
+              </CardTitle>
+              <CardDescription>
+                Export or restore your local profile, resource inventory, pity, and teams as JSON. Stored locally only.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-3">
+              <Button type="button" variant="outline" onClick={handleExportBackup} className="gap-2">
+                <Download className="w-4 h-4" />
+                Export My Data (JSON)
+              </Button>
+              <label className="inline-flex items-center gap-2 px-4 py-2 rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground text-sm font-medium cursor-pointer">
+                <Upload className="w-4 h-4" />
+                Import Backup (JSON)
+                <input type="file" accept="application/json" onChange={handleImportBackup} className="hidden" />
+              </label>
+            </CardContent>
+          </Card>
+
+          {/* Display Scale Setting */}
+          <Card>
+            <CardHeader>
+              <CardTitle className="text-lg">Display Scale</CardTitle>
+              <CardDescription>
+                Adjust the base interface zoom (modals maintain independent sizing).
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-wrap gap-2">
+              {[
+                { label: "90%", value: "0.9" },
+                { label: "100%", value: "1" },
+                { label: "110%", value: "1.1" },
+                { label: "125% (Default)", value: "1.25" },
+                { label: "150%", value: "1.5" },
+              ].map((opt) => (
+                <Button
+                  key={opt.value}
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    localStorage.setItem("cg_display_scale", opt.value);
+                    document.documentElement.style.setProperty("--app-display-scale", opt.value);
+                  }}
+                >
+                  {opt.label}
+                </Button>
+              ))}
             </CardContent>
           </Card>
         </div>

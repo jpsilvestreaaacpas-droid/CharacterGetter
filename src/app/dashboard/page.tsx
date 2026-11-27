@@ -6,6 +6,9 @@ import { Button } from "@/components/ui/button";
 import { ElementIcon } from "@/components/ui/element-icon";
 import { ChatEmojiImg } from "@/components/theme/chat-emoji-context";
 import { getDemoData } from "@/lib/data/demo-provider";
+import { usePlayerProfile, useBannerTracking } from "@/lib/hooks/use-local-player";
+import { CalculationService } from "@/lib/services/calculation-service";
+import { CalculationDetailsTrigger } from "@/components/ui/calculation-details";
 import {
   totalAvailableWishes,
   primogemsToWishes,
@@ -24,14 +27,25 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
-  const { profile, characters, characterEventPity, nextTarget } = getDemoData();
+  const demo = getDemoData();
+  const { profile: localProfile } = usePlayerProfile();
+  const { banners } = useBannerTracking();
+  const profile = localProfile ?? demo.profile;
+  const characters = demo.characters;
+  const characterEventPity =
+    banners.find((b) => b.bannerType === "CHARACTER_EVENT") ?? demo.characterEventPity;
+  const nextTarget = demo.nextTarget;
 
-  const totalWishes = totalAvailableWishes(profile.primogems, profile.intertwinedFates);
-  const wishesFromPrimos = primogemsToWishes(profile.primogems);
-  const rosterStats = calculateRosterStats(characters);
-
+  // Centralized calculations with authoritative sources and evidence
+  const wishCalc = CalculationService.calculateWishPower(profile.primogems, profile.intertwinedFates);
+  const rosterCalc = CalculationService.calculateRosterSummary(characters);
   const currentPity = characterEventPity?.currentPity ?? 64;
   const isGuaranteed = characterEventPity?.isGuaranteed ?? false;
+  const pityCalc = CalculationService.calculatePityGuarantees(currentPity, isGuaranteed, "CHARACTER_EVENT");
+
+  const totalWishes = wishCalc.value.totalWishes;
+  const wishesFromPrimos = wishCalc.value.wishesFromPrimos;
+  const rosterStats = rosterCalc.value;
   const pityPct = pityPercentage(currentPity, 90);
   const targetWishes = wishesToTarget(currentPity, isGuaranteed, 90);
 
@@ -82,7 +96,10 @@ export default function DashboardPage() {
           {/* Card 1: Available Wishes */}
           <div className="genshin-card filigree-corners p-3.5 sm:p-4 flex items-start justify-between min-w-0">
             <div className="space-y-1 min-w-0 flex-1 mr-2">
-              <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 truncate">Available Wishes</p>
+              <div className="flex items-center justify-between gap-1">
+                <p className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 truncate">Available Wishes</p>
+                <CalculationDetailsTrigger meta={wishCalc.meta} explanation={wishCalc.explanation} triggerLabel="Method" />
+              </div>
               <div className="flex items-baseline gap-1.5 flex-wrap">
                 <span className="text-xl sm:text-2xl font-black font-mono text-foreground leading-none">{totalWishes}</span>
                 <span className="text-[10px] sm:text-[11px] text-muted-foreground font-medium">({wishesFromPrimos} Primos + {profile.intertwinedFates} Fates)</span>
@@ -210,14 +227,20 @@ export default function DashboardPage() {
           {/* Budget Boxes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 pt-1 text-xs">
             <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5 min-w-0">
-              <p className="text-[10px] uppercase font-semibold text-muted-foreground">Wishes to 5-Star:</p>
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] uppercase font-semibold text-muted-foreground">Wishes to 5-Star:</p>
+                <CalculationDetailsTrigger meta={pityCalc.meta} triggerLabel="Pity Rules" />
+              </div>
               <p className="font-bold text-sm text-foreground font-mono">
                 {targetWishes.wishesToNext5Star} Pulls{" "}
                 <span className="text-xs text-muted-foreground font-normal">({targetWishes.wishesToNext5Star * 160} Primos)</span>
               </p>
             </div>
             <div className="p-3 rounded-lg bg-[#0c1424]/80 border border-border/70 space-y-0.5 min-w-0">
-              <p className="text-[10px] uppercase font-semibold text-muted-foreground">Guaranteed Target Budget:</p>
+              <div className="flex items-center justify-between">
+                <p className="text-[10px] uppercase font-semibold text-muted-foreground">Guaranteed Target Budget:</p>
+                <CalculationDetailsTrigger meta={pityCalc.meta} explanation={pityCalc.explanation} triggerLabel="Method" />
+              </div>
               <p className="font-bold text-sm text-foreground font-mono">
                 {targetWishes.wishesToGuaranteedTarget} Pulls{" "}
                 <span className="text-xs text-muted-foreground font-normal">(Worst Case)</span>

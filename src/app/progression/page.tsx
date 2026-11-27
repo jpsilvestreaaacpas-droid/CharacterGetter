@@ -12,6 +12,8 @@ import {
 import { getDemoData } from "@/lib/data/demo-provider";
 import { CANONICAL_CHARACTERS } from "@/lib/data/canonical-characters";
 import { calcAscensionCost, calcTalentCost, getTodayDomains } from "@/lib/data/progression-data";
+import { CalculationService } from "@/lib/services/calculation-service";
+import { CalculationDetailsTrigger } from "@/components/ui/calculation-details";
 
 const ELEMENT_COLORS: Record<string, string> = {
   Pyro: "red", Hydro: "blue", Anemo: "teal", Electro: "purple",
@@ -141,21 +143,33 @@ export default function ProgressionPage() {
                     {isExpanded ? <ChevronUp className="w-4 h-4 text-muted-foreground shrink-0" /> : <ChevronDown className="w-4 h-4 text-muted-foreground shrink-0" />}
                   </button>
 
-                  {/* Expanded cost breakdown */}
-                  {isExpanded && (
-                    <div className="border-t border-border/50 px-4 pb-4 pt-3 bg-muted/20 grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <p className="text-xs font-semibold text-foreground uppercase tracking-wide">Ascension to 6 ({c.ascension} → 6)</p>
-                        {ascCost.phasesNeeded === 0 ? (
-                          <p className="text-xs text-green-500">✓ Already fully ascended</p>
-                        ) : (
-                          <div className="flex items-center gap-2 text-sm">
-                            <Coins className="w-4 h-4 text-amber-500" />
-                            <span className="font-mono">{ascCost.mora.toLocaleString()} Mora</span>
-                            <span className="text-muted-foreground">· {ascCost.phasesNeeded} phases</span>
+                    {/* Expanded cost breakdown */}
+                    {isExpanded && (
+                      <div className="border-t border-border/50 px-4 pb-4 pt-3 bg-muted/20 grid sm:grid-cols-2 gap-4">
+                        <div className="space-y-2">
+                          <div className="flex items-center justify-between">
+                            <p className="text-xs font-semibold text-foreground uppercase tracking-wide">Ascension to 6 ({c.ascension} → 6)</p>
+                            {(() => {
+                              const calc = CalculationService.calculateAscensionMaterialRequirement(c.ascension, 6, c.rarity as 4 | 5);
+                              return (
+                                <CalculationDetailsTrigger
+                                  meta={calc.meta}
+                                  explanation={calc.explanation}
+                                  triggerLabel="Rules & Sources"
+                                />
+                              );
+                            })()}
                           </div>
-                        )}
-                      </div>
+                          {ascCost.phasesNeeded === 0 ? (
+                            <p className="text-xs text-green-500">✓ Already fully ascended</p>
+                          ) : (
+                            <div className="flex items-center gap-2 text-sm">
+                              <Coins className="w-4 h-4 text-amber-500" />
+                              <span className="font-mono">{ascCost.mora.toLocaleString()} Mora</span>
+                              <span className="text-muted-foreground">· {ascCost.phasesNeeded} phases</span>
+                            </div>
+                          )}
+                        </div>
                       <div className="space-y-2">
                         <p className="text-xs font-semibold text-foreground uppercase tracking-wide">Talents avg {avgTalent} → 10</p>
                         {avgTalent >= 10 ? (

@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Shared public game reference data: public read, admin-only write
+    match /{collection}/{document=**} {
+      allow read: if collection in [
+        'characters',
+        'character_talents',
+        'character_constellations',
+        'weapons',
+        'weapon_stats',
+        'weapon_passives',
+        'weapon_refinements',
+        'weapon_ascension_materials',
+        'weapon_sources',
+        'artifacts',
+        'materials',
+        'regions',
+        'elements',
+        'banners',
+        'banner_history',
+        'community_sources',
+        'banner_rumors',
+        'rumor_evidence',
+        'character_playstyles',
+        'playstyle_builds',
+        'calculation_sources',
+        'calculation_methods',
+        'material_requirements',
+        'game_versions',
+        'reference_teams'
+      ];
+      allow write: if false;
+    }
+  }
+}
