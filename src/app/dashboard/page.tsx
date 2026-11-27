@@ -6,7 +6,13 @@ import { Button } from "@/components/ui/button";
 import { ElementIcon } from "@/components/ui/element-icon";
 import { ChatEmojiImg } from "@/components/theme/chat-emoji-context";
 import { getDemoData } from "@/lib/data/demo-provider";
-import { usePlayerProfile, useBannerTracking } from "@/lib/hooks/use-local-player";
+import { CANONICAL_CHARACTERS } from "@/lib/data/canonical-characters";
+import {
+  usePlayerProfile,
+  useBannerTracking,
+  usePlayerCharacters,
+  usePlayerWeapons,
+} from "@/lib/hooks/use-local-player";
 import { CalculationService } from "@/lib/services/calculation-service";
 import { CalculationDetailsTrigger } from "@/components/ui/calculation-details";
 import {
@@ -27,21 +33,54 @@ import {
 } from "lucide-react";
 
 export default function DashboardPage() {
-  const demo = getDemoData();
+  const demo = React.useMemo(() => getDemoData(), []);
   const { profile: localProfile } = usePlayerProfile();
   const { banners } = useBannerTracking();
+  const { characters: localCharacters } = usePlayerCharacters();
+  const { weapons: localWeapons } = usePlayerWeapons();
+
   const profile = localProfile ?? demo.profile;
-  const characters = demo.characters;
+
+  const characters = React.useMemo(() => {
+    if (localCharacters.length > 0) {
+      return localCharacters.map((c) => {
+        const def = CANONICAL_CHARACTERS.find((d) => d.id === c.characterId);
+        return {
+          characterId: c.characterId,
+          name: def?.name ?? c.characterId,
+          title: def?.title ?? "",
+          element: def?.element ?? "Anemo",
+          weaponType: def?.weaponType ?? "Sword",
+          rarity: def?.rarity ?? 5,
+          level: c.level,
+          ascension: c.ascension,
+          constellation: c.constellation,
+          friendshipLevel: c.friendshipLevel,
+        };
+      });
+    }
+    return demo.characters;
+  }, [localCharacters, demo.characters]);
+
   const characterEventPity =
     banners.find((b) => b.bannerType === "CHARACTER_EVENT") ?? demo.characterEventPity;
   const nextTarget = demo.nextTarget;
 
   // Centralized calculations with authoritative sources and evidence
-  const wishCalc = CalculationService.calculateWishPower(profile.primogems, profile.intertwinedFates);
-  const rosterCalc = CalculationService.calculateRosterSummary(characters);
-  const currentPity = characterEventPity?.currentPity ?? 64;
+  const wishCalc = React.useMemo(
+    () => CalculationService.calculateWishPower(profile.primogems, profile.intertwinedFates),
+    [profile.primogems, profile.intertwinedFates]
+  );
+  const rosterCalc = React.useMemo(
+    () => CalculationService.calculateRosterSummary(characters),
+    [characters]
+  );
+  const currentPity = characterEventPity?.currentPity ?? 0;
   const isGuaranteed = characterEventPity?.isGuaranteed ?? false;
-  const pityCalc = CalculationService.calculatePityGuarantees(currentPity, isGuaranteed, "CHARACTER_EVENT");
+  const pityCalc = React.useMemo(
+    () => CalculationService.calculatePityGuarantees(currentPity, isGuaranteed, "CHARACTER_EVENT"),
+    [currentPity, isGuaranteed]
+  );
 
   const totalWishes = wishCalc.value.totalWishes;
   const wishesFromPrimos = wishCalc.value.wishesFromPrimos;
@@ -49,47 +88,127 @@ export default function DashboardPage() {
   const pityPct = pityPercentage(currentPity, 90);
   const targetWishes = wishesToTarget(currentPity, isGuaranteed, 90);
 
-  // The 6 showcase characters from the screenshot
-  const recentCharacters = [
-    { id: "raiden-shogun", name: "Raiden Shogun", title: "Plane of Euthymia",                element: "Electro", weaponType: "Polearm", rarity: 5, level: 90 },
-    { id: "furina",        name: "Furina",        title: "Endless Solo of Solitude",          element: "Hydro",   weaponType: "Sword",   rarity: 5, level: 90 },
-    { id: "nahida",        name: "Nahida",        title: "Physic of Purity",                  element: "Dendro",  weaponType: "Catalyst",rarity: 5, level: 90 },
-    { id: "kaedehara-kazuha", name: "Kaedehara Kazuha", title: "Scarlet Leaves Pursue Wild Waves", element: "Anemo", weaponType: "Sword", rarity: 5, level: 80 },
-    { id: "zhongli",       name: "Zhongli",       title: "Vago Mundo",                        element: "Geo",     weaponType: "Polearm", rarity: 5, level: 80 },
-    { id: "neuvillette",   name: "Neuvillette",   title: "Ordainer of Inexorable Judgment",   element: "Hydro",   weaponType: "Catalyst",rarity: 5, level: 90 },
-  ];
+  const level90Count = React.useMemo(
+    () => characters.filter((c) => c.level === 90).length,
+    [characters]
+  );
+  const level80Count = React.useMemo(
+    () => characters.filter((c) => c.level === 80).length,
+    [characters]
+  );
+  const maxFriendshipCount = React.useMemo(
+    () => characters.filter((c) => c.friendshipLevel === 10).length,
+    [characters]
+  );
+
+  const recentCharacters = React.useMemo(() => {
+    if (localCharacters.length > 0 && characters.length > 0) {
+      return [...characters]
+        .sort((a, b) => b.level - a.level || b.rarity - a.rarity)
+        .slice(0, 6)
+        .map((c) => ({
+          id: c.characterId,
+          name: c.name,
+          title: c.title,
+          element: c.element,
+          weaponType: c.weaponType,
+          rarity: c.rarity,
+          level: c.level,
+        }));
+    }
+    return [
+      { id: "raiden-shogun", name: "Raiden Shogun", title: "Plane of Euthymia", element: "Electro", weaponType: "Polearm", rarity: 5, level: 90 },
+      { id: "furina", name: "Furina", title: "Endless Solo of Solitude", element: "Hydro", weaponType: "Sword", rarity: 5, level: 90 },
+      { id: "nahida", name: "Nahida", title: "Physic of Purity", element: "Dendro", weaponType: "Catalyst", rarity: 5, level: 90 },
+      { id: "kaedehara-kazuha", name: "Kaedehara Kazuha", title: "Scarlet Leaves Pursue Wild Waves", element: "Anemo", weaponType: "Sword", rarity: 5, level: 80 },
+      { id: "zhongli", name: "Zhongli", title: "Vago Mundo", element: "Geo", weaponType: "Polearm", rarity: 5, level: 80 },
+      { id: "neuvillette", name: "Neuvillette", title: "Ordainer of Inexorable Judgment", element: "Hydro", weaponType: "Catalyst", rarity: 5, level: 90 },
+    ];
+  }, [localCharacters.length, characters]);
 
   return (
     <AppShell>
-      {/* Dashboard Top Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-2 border-b border-amber-500/15">
-        <div>
-          <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            Traveler Dashboard
-            <span className="text-xs sm:text-sm font-normal text-muted-foreground font-serif italic">
-              — Teyvat Expedition Overview
-            </span>
-          </h2>
-          <p className="text-xs text-muted-foreground mt-0.5">
-            Real-time status of your roster, pity progression, and wishing goals.
-          </p>
-        </div>
+      {/* Prominent Overview Banner synced with Settings Profile */}
+      <section
+        aria-label="Traveler Profile Overview Banner"
+        className="genshin-card filigree-corners p-5 sm:p-6 text-foreground"
+      >
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+          <div className="flex items-center gap-4 sm:gap-5 min-w-0">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl border border-[#D7B66D]/45 bg-[#101B35]/90 flex items-center justify-center shrink-0 shadow-inner">
+              <span className="text-2xl sm:text-3xl font-bold font-serif text-[#F2D38A] select-none">
+                {(profile.travelerName || "T").slice(0, 1).toUpperCase()}
+              </span>
+            </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
-          <Link to="/pull-planner">
-            <Button className="bg-gradient-to-r from-amber-400 via-gold-500 to-yellow-500 text-stone-950 font-bold hover:brightness-110 shadow-[0_0_15px_rgba(245,158,11,0.35)] text-xs h-8 px-3.5 gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              Pull Planner
-            </Button>
-          </Link>
-          <Link to="/characters">
-            <Button variant="outline" className="border-white/20 bg-white/5 hover:bg-white/10 text-foreground font-medium text-xs h-8 px-3.5 gap-1.5 backdrop-blur-md">
-              <Users className="w-3.5 h-3.5" />
-              View Roster
-            </Button>
-          </Link>
+            <div className="min-w-0 space-y-2">
+              <div className="flex flex-wrap items-center gap-2.5">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight truncate">
+                  {profile.travelerName || "Traveler"}
+                </h1>
+                <Badge variant="gold" className="text-xs font-mono px-2.5 py-0.5">
+                  AR {profile.adventureRank}
+                </Badge>
+                <Badge variant="outline" className="text-xs font-mono px-2.5 py-0.5 border-[#D7B66D]/40 text-[#EAEAF0]">
+                  WL {profile.worldLevel}
+                </Badge>
+              </div>
+
+              {profile.signature && (
+                <p className="text-sm sm:text-base text-muted-foreground font-serif italic line-clamp-2">
+                  &ldquo;{profile.signature}&rdquo;
+                </p>
+              )}
+
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs sm:text-sm text-muted-foreground">
+                <span>
+                  <strong className="text-[#F2D38A] font-mono">
+                    {profile.primogems.toLocaleString()}
+                  </strong>{" "}
+                  Primogems
+                </span>
+                <span>
+                  <strong className="text-foreground font-mono">
+                    {profile.intertwinedFates}
+                  </strong>{" "}
+                  Intertwined Fates
+                </span>
+                {localWeapons.length > 0 && (
+                  <span>
+                    <strong className="text-foreground font-mono">
+                      {localWeapons.length}
+                    </strong>{" "}
+                    Weapons
+                  </span>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 shrink-0">
+            <Link to="/settings">
+              <Button
+                variant="outline"
+                className="border-[#D7B66D]/40 bg-[#1C3154]/80 hover:bg-[#243F6B] text-[#EAEAF0] font-medium text-xs h-9 px-3.5"
+              >
+                Edit Profile
+              </Button>
+            </Link>
+            <Link to="/pull-planner">
+              <Button className="bg-gradient-to-r from-amber-400 via-gold-500 to-yellow-500 text-stone-950 font-bold hover:brightness-110 shadow-[0_0_15px_rgba(245,158,11,0.35)] text-xs h-9 px-3.5 gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 fill-current" />
+                Pull Planner
+              </Button>
+            </Link>
+            <Link to="/characters">
+              <Button variant="outline" className="border-white/20 bg-white/5 hover:bg-white/10 text-foreground font-medium text-xs h-9 px-3.5 gap-1.5 backdrop-blur-md">
+                <Users className="w-3.5 h-3.5" />
+                View Roster
+              </Button>
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
 
         {/* Row 1: 4 Stat Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-3.5">
@@ -272,10 +391,10 @@ export default function DashboardPage() {
               <div>
                 <div className="flex justify-between text-xs mb-1">
                   <span className="text-muted-foreground">Level 90 (Max Ascension)</span>
-                  <span className="font-mono text-amber-300 font-bold">{characters.filter((c) => c.level === 90).length} Characters</span>
+                  <span className="font-mono text-amber-300 font-bold">{level90Count} Characters</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-[#0a1222] overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full" style={{ width: `${(characters.filter((c) => c.level === 90).length / characters.length) * 100}%` }} />
+                  <div className="h-full bg-gradient-to-r from-amber-500 to-yellow-400 rounded-full" style={{ width: `${characters.length ? (level90Count / characters.length) * 100 : 0}%` }} />
                 </div>
               </div>
 
@@ -283,10 +402,10 @@ export default function DashboardPage() {
               <div>
                 <div className="flex justify-between text-xs mb-1">
                   <span className="text-muted-foreground">Level 80 (Ascension 5+)</span>
-                  <span className="font-mono text-foreground font-bold">{characters.filter((c) => c.level === 80).length} Characters</span>
+                  <span className="font-mono text-foreground font-bold">{level80Count} Characters</span>
                 </div>
                 <div className="h-1.5 w-full rounded-full bg-[#0a1222] overflow-hidden">
-                  <div className="h-full bg-amber-400/70 rounded-full" style={{ width: `${(characters.filter((c) => c.level === 80).length / characters.length) * 100}%` }} />
+                  <div className="h-full bg-amber-400/70 rounded-full" style={{ width: `${characters.length ? (level80Count / characters.length) * 100 : 0}%` }} />
                 </div>
               </div>
 
@@ -309,7 +428,7 @@ export default function DashboardPage() {
               </div>
               <div className="flex items-center justify-between">
                 <span>Max Friendship (Lv. 10):</span>
-                <span className="font-semibold text-foreground">{characters.filter((c) => c.friendshipLevel === 10).length} / {characters.length}</span>
+                <span className="font-semibold text-foreground">{maxFriendshipCount} / {characters.length}</span>
               </div>
             </div>
           </div>

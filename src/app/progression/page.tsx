@@ -21,14 +21,23 @@ const ELEMENT_COLORS: Record<string, string> = {
 };
 
 export default function ProgressionPage() {
-  const { characters } = getDemoData();
+  const { characters } = React.useMemo(() => getDemoData(), []);
   const [expandedId, setExpandedId] = React.useState<string | null>(null);
-  const todayDomains = getTodayDomains();
-  const dayName = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][new Date().getDay()];
+  const todayDomains = React.useMemo(() => getTodayDomains(), []);
+  const dayName = React.useMemo(
+    () => ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"][new Date().getDay()],
+    []
+  );
 
   // Characters not yet fully levelled
-  const inProgress = characters.filter((c) => c.level < 90 || c.ascension < 6);
-  const complete = characters.filter((c) => c.level >= 90 && c.ascension >= 6);
+  const inProgress = React.useMemo(
+    () => characters.filter((c) => c.level < 90 || c.ascension < 6),
+    [characters]
+  );
+  const complete = React.useMemo(
+    () => characters.filter((c) => c.level >= 90 && c.ascension >= 6),
+    [characters]
+  );
 
   return (
     <AppShell>

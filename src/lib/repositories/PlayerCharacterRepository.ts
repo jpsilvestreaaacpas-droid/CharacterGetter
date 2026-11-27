@@ -9,6 +9,7 @@ export interface OwnedCharacterWithProgress {
   constellation: number;
   level: number;
   ascension: number;
+  friendshipLevel: number;
   talentNormal: number;
   talentSkill: number;
   talentBurst: number;
@@ -41,6 +42,7 @@ export class PlayerCharacterRepository {
       characterId,
       level: 1,
       ascension: 0,
+      friendshipLevel: 1,
       talentNormal: 1,
       talentSkill: 1,
       talentBurst: 1,
@@ -63,6 +65,7 @@ export class PlayerCharacterRepository {
       constellation: 0,
       level: 1,
       ascension: 0,
+      friendshipLevel: 1,
       talentNormal: 1,
       talentSkill: 1,
       talentBurst: 1,
@@ -76,6 +79,7 @@ export class PlayerCharacterRepository {
       level: number;
       ascension: number;
       constellation: number;
+      friendshipLevel: number;
       talentNormal: number;
       talentSkill: number;
       talentBurst: number;
@@ -107,11 +111,16 @@ export class PlayerCharacterRepository {
         updates.ascension !== undefined
           ? Math.max(0, Math.min(6, Math.floor(updates.ascension)))
           : existingProg?.ascension ?? 0;
+      const friendshipLevel =
+        updates.friendshipLevel !== undefined
+          ? Math.max(1, Math.min(10, Math.floor(updates.friendshipLevel)))
+          : existingProg?.friendshipLevel ?? 1;
 
       await localDb.characterProgression.put({
         characterId,
         level,
         ascension,
+        friendshipLevel,
         talentNormal:
           updates.talentNormal !== undefined
             ? Math.max(1, Math.min(10, Math.floor(updates.talentNormal)))

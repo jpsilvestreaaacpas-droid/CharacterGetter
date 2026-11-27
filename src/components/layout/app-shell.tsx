@@ -35,7 +35,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             </span>
           </div>
           <span className="hidden md:inline font-mono text-[9px] uppercase tracking-wider text-amber-400/70 shrink-0 ml-2">
-            Sample Traveler Lumine
+            Local-First IndexedDB Profile
           </span>
         </div>
 

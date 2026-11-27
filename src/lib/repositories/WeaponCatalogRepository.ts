@@ -18,8 +18,30 @@ export interface SharedWeaponSummary {
   source?: string;
 }
 
+type WeaponFetchResult = {
+  weapons: SharedWeaponSummary[];
+  source: "firestore" | "cache" | "builtin";
+};
+
 export class WeaponCatalogRepository {
-  async getWeapons(): Promise<{ weapons: SharedWeaponSummary[]; source: "firestore" | "cache" | "builtin" }> {
+  private memoryCache: WeaponFetchResult | null = null;
+  private inflight: Promise<WeaponFetchResult> | null = null;
+
+  async getWeapons(forceRefresh = false): Promise<WeaponFetchResult> {
+    if (!forceRefresh && this.memoryCache) {
+      return this.memoryCache;
+    }
+    if (!forceRefresh && this.inflight) {
+      return this.inflight;
+    }
+
+    this.inflight = this.fetchWeapons().finally(() => {
+      this.inflight = null;
+    });
+    return this.inflight;
+  }
+
+  private async fetchWeapons(): Promise<WeaponFetchResult> {
     if (isFirebaseConfigured && firestoreDb) {
       try {
         const snap = await getDocs(collection(firestoreDb, "weapons"));
@@ -37,7 +59,9 @@ export class WeaponCatalogRepository {
           } catch {
             // ignore quota errors
           }
-          return { weapons, source: "firestore" };
+          const result: WeaponFetchResult = { weapons, source: "firestore" };
+          this.memoryCache = result;
+          return result;
         }
       } catch {
         // offline fallback
@@ -49,20 +73,22 @@ export class WeaponCatalogRepository {
       if (raw) {
         const parsed = JSON.parse(raw) as { weapons?: SharedWeaponSummary[] };
         if (Array.isArray(parsed.weapons) && parsed.weapons.length > 0) {
-          return {
+          const result: WeaponFetchResult = {
             weapons: parsed.weapons.map((w) => ({
               ...w,
               iconUrl: getGiLoadoutsWeaponIcon(w.name) ?? w.iconUrl,
             })),
             source: "cache",
           };
+          this.memoryCache = result;
+          return result;
         }
       }
     } catch {
       // ignore
     }
 
-    return {
+    const result: WeaponFetchResult = {
       weapons: WEAPON_CATALOG.map((w) => ({
         id: w.id,
         name: w.name,
@@ -75,6 +101,8 @@ export class WeaponCatalogRepository {
       })),
       source: "builtin",
     };
+    this.memoryCache = result;
+    return result;
   }
 }
 

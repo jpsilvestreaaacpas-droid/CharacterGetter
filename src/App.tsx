@@ -29,9 +29,12 @@ const TeamsPage = lazy(() => import("@/app/teams/page"));
 const SettingsPage = lazy(() => import("@/app/settings/page"));
 const NotFoundPage = lazy(() => import("@/app/not-found"));
 
-// Preload critical secondary routes on idle
+// Preload secondary routes on idle or sidebar hover
 export const preloadRoute = (route: string) => {
   switch (route) {
+    case "/dashboard":
+      import("@/app/dashboard/page");
+      break;
     case "/characters":
       import("@/app/characters/page");
       break;
@@ -40,6 +43,21 @@ export const preloadRoute = (route: string) => {
       break;
     case "/banner-radar":
       import("@/app/banner-radar/page");
+      break;
+    case "/resources":
+      import("@/app/resources/page");
+      break;
+    case "/progression":
+      import("@/app/progression/page");
+      break;
+    case "/weapons":
+      import("@/app/weapons/page");
+      break;
+    case "/teams":
+      import("@/app/teams/page");
+      break;
+    case "/settings":
+      import("@/app/settings/page");
       break;
     default:
       break;

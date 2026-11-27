@@ -2,7 +2,7 @@
 
 import * as React from "react";
 
-export type RegionalBackgroundId = "mondstadt" | "inazuma";
+export type RegionalBackgroundId = "mondstadt" | "inazuma" | "teyvat";
 
 export interface RegionalBackgroundOption {
   id: RegionalBackgroundId;
@@ -30,6 +30,14 @@ export const REGIONAL_BACKGROUNDS: RegionalBackgroundOption[] = [
     accentColor: "#a855f7",
     description: "Mystic purple Electro starlight over Mount Yougou and sacred sakura.",
   },
+  {
+    id: "teyvat",
+    name: "Teyvat Horizon",
+    region: "Teyvat",
+    image: "/images/backgrounds/teyvat.jpg",
+    accentColor: "#f59e0b",
+    description: "Panoramic Teyvat vista overlooking ancient ruins, skies, and distant peaks.",
+  },
 ];
 
 interface BackgroundContextType {
@@ -49,7 +57,7 @@ export function BackgroundProvider({ children }: { children: React.ReactNode }) 
   React.useEffect(() => {
     try {
       const saved = localStorage.getItem(STORAGE_KEY) as RegionalBackgroundId;
-      if (saved && (saved === "mondstadt" || saved === "inazuma")) {
+      if (saved && (saved === "mondstadt" || saved === "inazuma" || saved === "teyvat")) {
         setCurrentBackgroundState(saved);
       }
     } catch {

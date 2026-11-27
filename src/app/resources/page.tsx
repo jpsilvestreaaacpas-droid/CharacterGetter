@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { RESOURCE_CATALOGUE, ResourceDefinition } from "@/lib/data/resources";
 import { usePlayerResources } from "@/lib/hooks/use-local-player";
+import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
 import { Pagination } from "@/components/ui/pagination";
 
 // Demo resource quantities (M2 uses live DB in future; here we show interactive client state)
@@ -73,20 +74,28 @@ export default function ResourcesPage() {
   }, [storedResources]);
 
   const [filter, setFilter] = React.useState("");
+  const debouncedFilter = useDebouncedValue(filter, 150);
   const [activeCategory, setActiveCategory] = React.useState<string>("all");
   const [page, setPage] = React.useState(0);
 
   React.useEffect(() => {
     setPage(0);
-  }, [filter, activeCategory]);
+  }, [debouncedFilter, activeCategory]);
 
-  const categories = ["all", ...Array.from(new Set(RESOURCE_CATALOGUE.map((r) => r.category)))];
+  const categories = React.useMemo(
+    () => ["all", ...Array.from(new Set(RESOURCE_CATALOGUE.map((r) => r.category)))],
+    []
+  );
 
-  const filtered = resources.filter((r) => {
-    const matchCat = activeCategory === "all" || r.category === activeCategory;
-    const matchSearch = r.name.toLowerCase().includes(filter.toLowerCase());
-    return matchCat && matchSearch;
-  });
+  const filtered = React.useMemo(
+    () =>
+      resources.filter((r) => {
+        const matchCat = activeCategory === "all" || r.category === activeCategory;
+        const matchSearch = r.name.toLowerCase().includes(debouncedFilter.toLowerCase());
+        return matchCat && matchSearch;
+      }),
+    [resources, activeCategory, debouncedFilter]
+  );
 
   const paginate = PAGINATED.has(activeCategory);
   const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));

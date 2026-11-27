@@ -23,7 +23,7 @@ export interface CharacterCardProps {
   className?: string;
 }
 
-export function CharacterCard({
+export const CharacterCard = React.memo(function CharacterCard({
   id,
   name,
   title,
@@ -114,4 +114,4 @@ export function CharacterCard({
       </div>
     </Card>
   );
-}
+});

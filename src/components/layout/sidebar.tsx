@@ -34,7 +34,7 @@ export const NAV_ITEMS = [
   { title: "Settings", href: "/settings", icon: Settings, badge: null, slot: "sidebar_settings" as const },
 ];
 
-export function Sidebar({ className }: { className?: string }) {
+export const Sidebar = React.memo(function Sidebar({ className }: { className?: string }) {
   const { pathname } = useLocation();
   const [mobileOpen, setMobileOpen] = React.useState(false);
 
@@ -62,27 +62,25 @@ export function Sidebar({ className }: { className?: string }) {
 
         <aside
           className={cn(
-            "fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-[#0a1222]/92 backdrop-blur-2xl border-r border-amber-500/20 shadow-2xl transition-transform duration-300",
+            "fixed top-0 bottom-0 left-0 z-40 flex flex-col w-64 bg-[#101B35]/95 backdrop-blur-2xl border-r border-[#D7B66D]/25 shadow-2xl transition-transform duration-300",
             mobileOpen ? "translate-x-0" : "-translate-x-full",
             "lg:translate-x-0",
-            // slide out whenever any modal has set the flag
-            "[body[data-modal-open]_&]:-translate-x-full",
             className
           )}
         >
           
         {/* Brand Header */}
-        <div className="p-5 border-b border-amber-500/15 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-amber-400 via-gold-500 to-yellow-600 flex items-center justify-center text-stone-950 shadow-[0_0_12px_rgba(245,158,11,0.4)]">
+        <div className="px-5 py-4 border-b border-[#D7B66D]/20 flex items-center justify-between">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F2D38A] via-[#D7B66D] to-[#A98326] flex items-center justify-center text-[#101B35] shadow-[0_0_12px_rgba(242,211,138,0.4)] shrink-0">
               <Compass className="w-5 h-5" />
             </div>
-            <div>
-              <h1 className="font-bold text-sm tracking-tight text-foreground flex items-center gap-1.5">
+            <div className="min-w-0">
+              <h1 className="font-bold text-[18px] leading-tight tracking-tight text-[#EAEAF0] flex items-center gap-1.5 whitespace-nowrap">
                 Character Getter
-                <Star className="w-3 h-3 text-gold-400 fill-gold-400" />
+                <Star className="w-3.5 h-3.5 text-[#F2D38A] fill-[#F2D38A] shrink-0" />
               </h1>
-              <p className="text-[11px] text-muted-foreground font-serif italic">Teyvat Companion</p>
+              <p className="text-[13.5px] text-[#AEBBD0] font-serif italic truncate">Teyvat Companion</p>
             </div>
           </div>
         </div>
@@ -99,23 +97,23 @@ export function Sidebar({ className }: { className?: string }) {
                   onMouseEnter={() => preloadRoute(item.href)}
                   onClick={() => setMobileOpen(false)}
                   className={cn(
-                    "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-medium transition-all relative z-10",
+                    "flex items-center justify-between px-3.5 min-h-[44px] py-2.5 rounded-xl text-[15.5px] font-medium transition-all relative z-10 whitespace-nowrap",
                     isActive
-                      ? "bg-gradient-to-r from-amber-500/20 via-gold-500/15 to-transparent text-amber-300 font-bold border border-amber-500/40 shadow-[inset_0_0_12px_rgba(245,158,11,0.15)]"
-                      : "text-muted-foreground hover:bg-white/5 hover:text-foreground"
+                      ? "bg-gradient-to-r from-[#D7B66D]/25 via-[#D7B66D]/12 to-transparent text-[#F2D38A] font-semibold border border-[#D7B66D]/45 shadow-[inset_0_0_12px_rgba(215,182,109,0.18)]"
+                      : "text-[#AEBBD0] hover:bg-[#1C3154]/80 hover:text-[#EAEAF0]"
                   )}
                 >
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-3 min-w-0">
                     <Icon
                       className={cn(
-                        "w-4 h-4 transition-colors",
-                        isActive ? "text-amber-400" : "text-muted-foreground group-hover:text-foreground"
+                        "w-5 h-5 shrink-0 transition-colors",
+                        isActive ? "text-[#F2D38A]" : "text-[#AEBBD0] group-hover:text-[#EAEAF0]"
                       )}
                     />
-                    <span>{item.title}</span>
+                    <span className="truncate">{item.title}</span>
                   </div>
                   {item.badge && (
-                    <span className="text-[10px] font-mono font-bold px-1.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">
+                    <span className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-full bg-[#D7B66D]/20 text-[#F2D38A] border border-[#D7B66D]/35 shrink-0">
                       {item.badge}
                     </span>
                   )}
@@ -123,8 +121,8 @@ export function Sidebar({ className }: { className?: string }) {
 
                 {/* Chat emoji decoration on active nav items with assigned slots */}
                 {"slot" in item && item.slot && isActive && (
-                  <div className="absolute -top-3 -right-1 z-20 animate-genshin-float">
-                    <ChatEmojiImg slot={item.slot} size={36} animate={false} />
+                  <div className="absolute -top-2.5 right-1 z-20 pointer-events-none animate-genshin-float">
+                    <ChatEmojiImg slot={item.slot} size={32} animate={false} />
                   </div>
                 )}
               </div>
@@ -133,23 +131,23 @@ export function Sidebar({ className }: { className?: string }) {
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-amber-500/15 bg-black/25 text-xs text-muted-foreground relative">
-          <div className="flex items-end justify-between">
-            <div className="space-y-0.5">
-              <div className="flex items-center gap-1.5">
-                <span className="font-mono text-[10px] px-1.5 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/25">
-                  Milestone 2
+        <div className="p-4 border-t border-[#D7B66D]/20 bg-[#0c152a]/70 text-[13px] text-[#AEBBD0] relative">
+          <div className="flex items-end justify-between gap-2">
+            <div className="space-y-1 min-w-0">
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="font-mono text-[11px] px-1.5 py-0.5 rounded bg-[#D7B66D]/15 text-[#F2D38A] border border-[#D7B66D]/30">
+                  Local-First
                 </span>
-                <span className="text-amber-400 font-semibold text-[11px]">Resources &amp; Teams</span>
+                <span className="text-[#F2D38A] font-semibold text-[13px]">Teyvat Archive</span>
               </div>
-              <p className="text-[10px] text-muted-foreground/70">Independent Teyvat Companion</p>
+              <p className="text-[12px] text-[#AEBBD0]/80 truncate">Independent Companion</p>
             </div>
 
             {/* Chat emoji decoration in footer */}
-            <ChatEmojiImg slot="sidebar_footer" size={36} animate={false} />
+            <ChatEmojiImg slot="sidebar_footer" size={34} animate={false} />
           </div>
         </div>
       </aside>
     </>
   );
-}
+});

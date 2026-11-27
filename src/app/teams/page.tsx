@@ -22,22 +22,24 @@ const DIFFICULTY_COLORS: Record<string, string> = {
 };
 
 export default function TeamsPage() {
-  const { characters: ownedChars } = getDemoData();
+  const { characters: ownedChars } = React.useMemo(() => getDemoData(), []);
   const [activeTab, setActiveTab] = React.useState<"presets" | "builder">("presets");
   const [builderSlots, setBuilderSlots] = React.useState<(string | null)[]>([null, null, null, null]);
   const [pickerSlot, setPickerSlot] = React.useState<number | null>(null);
 
   // Characters in custom builder
-  const builderChars = builderSlots.map((id) =>
-    id ? CANONICAL_CHARACTERS.find((c) => c.id === id) : null
+  const builderChars = React.useMemo(
+    () => builderSlots.map((id) => (id ? CANONICAL_CHARACTERS.find((c) => c.id === id) : null)),
+    [builderSlots]
   );
-  const builderElements = builderChars
-    .filter(Boolean)
-    .map((c) => c!.element as Element);
-  const resonances = detectResonances(builderElements);
+  const builderElements = React.useMemo(
+    () => builderChars.filter(Boolean).map((c) => c!.element as Element),
+    [builderChars]
+  );
+  const resonances = React.useMemo(() => detectResonances(builderElements), [builderElements]);
 
   // Check if player owns a character for preset teams
-  const ownedIds = new Set(ownedChars.map((c) => c.characterId));
+  const ownedIds = React.useMemo(() => new Set(ownedChars.map((c) => c.characterId)), [ownedChars]);
 
   function assignSlot(slotIdx: number, charId: string) {
     setBuilderSlots((prev) => {

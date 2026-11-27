@@ -10,10 +10,14 @@ import { Input } from "@/components/ui/input";
 import {
   Radar, Sparkles, AlertTriangle, ShieldCheck, ExternalLink,
   ChevronRight, Info, PlusCircle, CheckCircle2, History,
-  TrendingUp, Users, Clock, AlertCircle, Bookmark, Compass
+  TrendingUp, Users, Clock, AlertCircle, Bookmark, Compass, RefreshCw
 } from "lucide-react";
 import { getBannerPredictions, BannerPrediction } from "@/lib/data/banner-radar-data";
 import { getDemoData } from "@/lib/data/demo-provider";
+import { usePlayerProfile, useBannerTracking } from "@/lib/hooks/use-local-player";
+import { useDebouncedValue } from "@/lib/hooks/use-debounced-value";
+import { wishEventHistoryRepo, WishEventBanner } from "@/lib/repositories/WishEventHistoryRepository";
+import { Pagination } from "@/components/ui/pagination";
 import { totalAvailableWishes, wishesToTarget } from "@/lib/calculations";
 
 const STATUS_VARIANTS: Record<string, { label: string; color: string; badgeVariant?: string }> = {
@@ -27,13 +31,53 @@ const STATUS_VARIANTS: Record<string, { label: string; color: string; badgeVaria
 
 export default function BannerRadarPage() {
   const predictions = React.useMemo(() => getBannerPredictions(), []);
-  const { profile, characterEventPity } = getDemoData();
+  const demo = React.useMemo(() => getDemoData(), []);
+  const { profile: localProfile } = usePlayerProfile();
+  const { banners: trackedBanners } = useBannerTracking();
+  const profile = localProfile ?? demo.profile;
+  const characterEventPity =
+    trackedBanners.find((b) => b.bannerType === "CHARACTER_EVENT") ?? demo.characterEventPity;
+
+  // Tab: Rerun Radar vs Historical Wish Event Data (Masterain98)
+  const [activeTab, setActiveTab] = React.useState<"radar" | "history">("radar");
+  const [historyBanners, setHistoryBanners] = React.useState<WishEventBanner[]>([]);
+  const [historySource, setHistorySource] = React.useState<"github" | "cache" | "empty">("empty");
+  const [historyLoading, setHistoryLoading] = React.useState(false);
+  const [historySearch, setHistorySearch] = React.useState("");
+  const debouncedHistorySearch = useDebouncedValue(historySearch, 150);
+  const [historyCategory, setHistoryCategory] = React.useState<string>("All");
+  const [historyPage, setHistoryPage] = React.useState(1);
+  const [historyPageSize, setHistoryPageSize] = React.useState(12);
+
+  const loadHistory = React.useCallback(async (forceRefresh = false) => {
+    setHistoryLoading(true);
+    try {
+      const res = await wishEventHistoryRepo.getBanners(forceRefresh);
+      setHistoryBanners(res.banners);
+      setHistorySource(res.source);
+    } finally {
+      setHistoryLoading(false);
+    }
+  }, []);
+
+  React.useEffect(() => {
+    if (activeTab === "history" && historyBanners.length === 0 && !historyLoading) {
+      loadHistory(false);
+    }
+  }, [activeTab, historyBanners.length, historyLoading, loadHistory]);
+
+  React.useEffect(() => {
+    setHistoryPage(1);
+  }, [historySearch, historyCategory]);
 
   // Local-First Player Wish Planning State (never uploaded to community DB)
   const availableWishes = totalAvailableWishes(profile.primogems, profile.intertwinedFates);
   const currentPity = characterEventPity?.currentPity ?? 0;
   const isGuaranteed = characterEventPity?.isGuaranteed ?? false;
-  const targetPlanning = wishesToTarget(currentPity, isGuaranteed);
+  const targetPlanning = React.useMemo(
+    () => wishesToTarget(currentPity, isGuaranteed),
+    [currentPity, isGuaranteed]
+  );
 
   // Filters
   const [filterVersion, setFilterVersion] = React.useState<string>("all");
@@ -66,14 +110,40 @@ export default function BannerRadarPage() {
 
   const statuses = ["all", "Officially confirmed", "Corroborated", "Developing", "Disputed", "Stale"];
 
-  const filteredPredictions = predictions.filter((p) => {
-    const matchVer = filterVersion === "all" || p.estimatedVersion === filterVersion;
-    const matchStatus = filterStatus === "all" || p.evaluation.status === filterStatus;
-    const matchSearch =
-      p.characterName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      p.characterId.toLowerCase().includes(searchQuery.toLowerCase());
-    return matchVer && matchStatus && matchSearch;
-  });
+  const filteredPredictions = React.useMemo(
+    () =>
+      predictions.filter((p) => {
+        const matchVer = filterVersion === "all" || p.estimatedVersion === filterVersion;
+        const matchStatus = filterStatus === "all" || p.evaluation.status === filterStatus;
+        const matchSearch =
+          p.characterName.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          p.characterId.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchVer && matchStatus && matchSearch;
+      }),
+    [predictions, filterVersion, filterStatus, searchQuery]
+  );
+
+  const filteredHistory = React.useMemo(() => {
+    const q = debouncedHistorySearch.trim().toLowerCase();
+    return historyBanners.filter((b) => {
+      const matchCat = historyCategory === "All" || b.bannerCategory === historyCategory;
+      const matchQuery =
+        !q ||
+        b.title.toLowerCase().includes(q) ||
+        b.version.toLowerCase().includes(q);
+      return matchCat && matchQuery;
+    });
+  }, [historyBanners, historyCategory, debouncedHistorySearch]);
+
+  const historyTotalPages = Math.max(1, Math.ceil(filteredHistory.length / historyPageSize));
+  const pagedHistory = React.useMemo(
+    () =>
+      filteredHistory.slice(
+        (historyPage - 1) * historyPageSize,
+        historyPage * historyPageSize
+      ),
+    [filteredHistory, historyPage, historyPageSize]
+  );
 
   function handleSubmittal(e: React.FormEvent) {
     e.preventDefault();
@@ -143,6 +213,58 @@ export default function BannerRadarPage() {
         </div>
       </Card>
 
+      {/* Mode Tabs */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex gap-1 p-1 bg-muted/40 rounded-lg border border-border/60 w-fit">
+          <button
+            onClick={() => setActiveTab("radar")}
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 ${
+              activeTab === "radar"
+                ? "bg-gold-500/20 text-gold-600 dark:text-gold-400"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <Radar className="w-3.5 h-3.5" />
+            Rerun Radar
+          </button>
+          <button
+            onClick={() => setActiveTab("history")}
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-md transition-colors flex items-center gap-1.5 ${
+              activeTab === "history"
+                ? "bg-gold-500/20 text-gold-600 dark:text-gold-400"
+                : "text-muted-foreground hover:text-foreground"
+            }`}
+          >
+            <History className="w-3.5 h-3.5" />
+            Wish Event History
+          </button>
+        </div>
+
+        {activeTab === "history" && (
+          <div className="flex items-center gap-2">
+            <Badge variant="outline" className="text-[10px]">
+              {historySource === "github"
+                ? "Masterain98 GitHub Live"
+                : historySource === "cache"
+                  ? "Cached History"
+                  : "Not Loaded"}
+            </Badge>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => loadHistory(true)}
+              disabled={historyLoading}
+              className="text-xs gap-1.5 h-8"
+            >
+              <RefreshCw className={`w-3.5 h-3.5 ${historyLoading ? "animate-spin" : ""}`} />
+              Sync Banner Data
+            </Button>
+          </div>
+        )}
+      </div>
+
+      {activeTab === "radar" && (
+      <>
       {/* Filters Bar */}
       <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
         <div className="flex flex-wrap gap-2 items-center">
@@ -312,11 +434,119 @@ export default function BannerRadarPage() {
           );
         })}
       </div>
+      </>
+      )}
+
+      {/* Wish Event History Tab (Masterain98/Genshin-Wish-Event-History-Data) */}
+      {activeTab === "history" && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
+            <div className="flex flex-wrap gap-2 items-center">
+              <Input
+                placeholder="Search banner title or version (e.g. 5.3)..."
+                value={historySearch}
+                onChange={(e) => setHistorySearch(e.target.value)}
+                className="h-8 text-xs sm:w-64"
+              />
+              <div className="flex flex-wrap gap-1 p-0.5 bg-muted/40 rounded-md border border-border/60">
+                {["All", "Character Event", "Weapon Event", "Chronicled Wish"].map((cat) => (
+                  <button
+                    key={cat}
+                    onClick={() => setHistoryCategory(cat)}
+                    className={`text-xs px-2.5 py-1 rounded transition-colors ${
+                      historyCategory === cat
+                        ? "bg-gold-500/20 text-gold-600 dark:text-gold-400 font-semibold"
+                        : "text-muted-foreground hover:text-foreground"
+                    }`}
+                  >
+                    {cat}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground font-mono">
+              {filteredHistory.length} historical banner(s)
+            </p>
+          </div>
+
+          {historyLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="h-56 animate-pulse rounded-xl bg-muted/40 border border-border/50" />
+              ))}
+            </div>
+          ) : pagedHistory.length === 0 ? (
+            <Card className="p-8 text-center border-dashed border-border">
+              <p className="text-sm font-medium text-foreground">No banner history records match your filters.</p>
+              <p className="text-xs text-muted-foreground mt-1">
+                Click &ldquo;Sync Banner Data&rdquo; to fetch the latest wish event history from Masterain98/Genshin-Wish-Event-History-Data.
+              </p>
+            </Card>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {pagedHistory.map((b) => (
+                  <Card key={b.id} className="border-border/70 overflow-hidden flex flex-col justify-between">
+                    {b.bannerImage && (
+                      <div className="h-36 w-full bg-muted/30 overflow-hidden border-b border-border/50">
+                        <img
+                          src={b.bannerImage}
+                          alt={b.title}
+                          loading="lazy"
+                          decoding="async"
+                          onError={(e) => {
+                            const img = e.currentTarget;
+                            if (b.bannerImageBackup && img.src !== b.bannerImageBackup) {
+                              img.src = b.bannerImageBackup;
+                            } else {
+                              img.style.display = "none";
+                            }
+                          }}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <div className="p-4 space-y-2">
+                      <div className="flex items-center justify-between gap-2">
+                        <Badge variant="gold" className="text-[10px] font-mono">
+                          v{b.version}
+                        </Badge>
+                        <Badge variant="outline" className="text-[10px]">
+                          {b.bannerCategory}
+                        </Badge>
+                      </div>
+                      <h3 className="font-bold text-base text-foreground leading-snug">
+                        {b.title}
+                      </h3>
+                      <p className="text-xs text-muted-foreground font-mono">
+                        {b.startTime.slice(0, 10)} → {b.endTime.slice(0, 10)}
+                      </p>
+                      <div className="flex items-center gap-3 pt-1 text-xs text-muted-foreground">
+                        <span>{b.featuredFiveStars.length}× 5★ Featured</span>
+                        <span>·</span>
+                        <span>{b.featuredFourStars.length}× 4★ Featured</span>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+              <Pagination
+                page={historyPage}
+                totalPages={historyTotalPages}
+                pageSize={historyPageSize}
+                totalItems={filteredHistory.length}
+                onPageChange={setHistoryPage}
+                onPageSizeChange={setHistoryPageSize}
+              />
+            </>
+          )}
+        </div>
+      )}
 
       {/* "Why this percentage?" Explanation Modal */}
       {selectedPrediction && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200">
-          <Card className="max-w-2xl w-full max-h-[90vh] overflow-y-auto border-gold-500/40 p-6 space-y-6 shadow-2xl">
+        <div className="fixed inset-0 lg:left-64 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm animate-in fade-in duration-200">
+          <Card className="genshin-modal max-w-2xl w-full max-h-[90vh] overflow-y-auto p-6 space-y-6 shadow-2xl">
             <div className="flex items-start justify-between border-b border-border/60 pb-4">
               <div>
                 <div className="flex items-center gap-2">

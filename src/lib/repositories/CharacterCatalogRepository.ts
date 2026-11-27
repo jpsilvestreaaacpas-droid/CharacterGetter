@@ -12,7 +12,24 @@ export interface CatalogFetchResult {
 }
 
 export class CharacterCatalogRepository {
-  async getCharacters(): Promise<CatalogFetchResult> {
+  private memoryCache: CatalogFetchResult | null = null;
+  private inflight: Promise<CatalogFetchResult> | null = null;
+
+  async getCharacters(forceRefresh = false): Promise<CatalogFetchResult> {
+    if (!forceRefresh && this.memoryCache) {
+      return this.memoryCache;
+    }
+    if (!forceRefresh && this.inflight) {
+      return this.inflight;
+    }
+
+    this.inflight = this.fetchCharacters().finally(() => {
+      this.inflight = null;
+    });
+    return this.inflight;
+  }
+
+  private async fetchCharacters(): Promise<CatalogFetchResult> {
     if (isFirebaseConfigured && firestoreDb) {
       try {
         const snap = await getDocs(collection(firestoreDb, "characters"));
@@ -28,7 +45,9 @@ export class CharacterCatalogRepository {
           } catch {
             // ignore storage quota errors
           }
-          return { characters, source: "firestore", cachedAt: now };
+          const result: CatalogFetchResult = { characters, source: "firestore", cachedAt: now };
+          this.memoryCache = result;
+          return result;
         }
       } catch {
         // Fall back to local cache when offline or Firestore unavailable
@@ -40,21 +59,25 @@ export class CharacterCatalogRepository {
       if (raw) {
         const parsed = JSON.parse(raw) as { cachedAt?: string; characters?: GameCharacterType[] };
         if (Array.isArray(parsed.characters) && parsed.characters.length > 0) {
-          return {
+          const result: CatalogFetchResult = {
             characters: parsed.characters,
             source: "cache",
             cachedAt: parsed.cachedAt,
           };
+          this.memoryCache = result;
+          return result;
         }
       }
     } catch {
       // ignore malformed cache
     }
 
-    return {
+    const result: CatalogFetchResult = {
       characters: CANONICAL_CHARACTERS,
       source: "builtin",
     };
+    this.memoryCache = result;
+    return result;
   }
 }
 

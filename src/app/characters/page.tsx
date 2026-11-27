@@ -1,11 +1,16 @@
 "use client";
 
 import * as React from "react";
+import { Link } from "react-router-dom";
 import { AppShell } from "@/components/layout/app-shell";
 import { CharacterCard } from "@/components/ui/character-card";
 import { CANONICAL_CHARACTERS } from "@/lib/data/canonical-characters";
 import { characterCatalogRepo } from "@/lib/repositories/CharacterCatalogRepository";
 import { playerCharacterRepo } from "@/lib/repositories/PlayerCharacterRepository";
+import { weaponCatalogRepo, SharedWeaponSummary } from "@/lib/repositories/WeaponCatalogRepository";
+import { playerWeaponRepo } from "@/lib/repositories/PlayerWeaponRepository";
+import { usePlayerCharacters, usePlayerWeapons } from "@/lib/hooks/use-local-player";
+import { getCharacterPortrait } from "@/lib/data/character-portraits";
 import type { GameCharacterType } from "@/lib/data/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +20,7 @@ import { getDemoData } from "@/lib/data/demo-provider";
 import { getPlaystylesForCharacter } from "@/lib/data/playstyles";
 import { analyzePlayerBuildAgainstPlaystyle } from "@/lib/playstyles/analyzer";
 import {
-  Plus, Search, Sparkles, Swords, X,
+  Plus, Search, Sparkles, Swords, X, Pencil, Save, CheckCircle2, AlertTriangle, Sword, Shield, Minus,
 } from "lucide-react";
 
 const ELEMENTS = ["All", "Pyro", "Hydro", "Anemo", "Electro", "Dendro", "Cryo", "Geo"];
@@ -53,6 +58,9 @@ function clamp(value: number, min: number, max: number) {
   return value;
 }
 
+const ASCENSION_MIN_LEVEL = [1, 20, 40, 50, 60, 70, 80] as const;
+const ASCENSION_MAX_LEVEL = [20, 40, 50, 60, 70, 80, 90] as const;
+
 function getAscension(level: number) {
   if (level > 80) return 6;
   if (level > 70) return 5;
@@ -61,6 +69,16 @@ function getAscension(level: number) {
   if (level > 40) return 2;
   if (level > 20) return 1;
   return 0;
+}
+
+function getValidAscensionsForLevel(level: number): number[] {
+  const valid: number[] = [];
+  for (let asc = 0; asc <= 6; asc++) {
+    if (level >= ASCENSION_MIN_LEVEL[asc] && level <= ASCENSION_MAX_LEVEL[asc]) {
+      valid.push(asc);
+    }
+  }
+  return valid.length ? valid : [getAscension(level)];
 }
 
 const TAB_BASE = "text-xs px-3.5 py-1.5 rounded-md transition-colors flex items-center gap-1.5";
@@ -93,6 +111,20 @@ function Portrait({ urls, name, element }: { urls: (string | undefined)[]; name:
 
 
 export default function CharactersPage() {
+  const { characters: dexieCharacters } = usePlayerCharacters();
+  const { weapons: ownedWeapons } = usePlayerWeapons();
+  const [weaponCatalog, setWeaponCatalog] = React.useState<SharedWeaponSummary[]>([]);
+  const [showWeaponPicker, setShowWeaponPicker] = React.useState(false);
+  const [weaponPickerSearch, setWeaponPickerSearch] = React.useState("");
+  const [portraitError, setPortraitError] = React.useState(false);
+
+  React.useEffect(() => {
+    weaponCatalogRepo
+      .getWeapons()
+      .then((res) => setWeaponCatalog(res.weapons))
+      .catch(console.error);
+  }, []);
+
   const [characters, setCharacters] = React.useState<OwnedCharacter[]>(() => {
     const list = getDemoData().characters as OwnedCharacter[];
     const withWeapons: OwnedCharacter[] = [];
@@ -115,10 +147,15 @@ export default function CharactersPage() {
   const [showAddPanel, setShowAddPanel] = React.useState(false);
   const [addSearch, setAddSearch] = React.useState("");
   const [isEditing, setIsEditing] = React.useState(false);
+  const [saveMessage, setSaveMessage] = React.useState<string | null>(null);
+  const [saveError, setSaveError] = React.useState<string | null>(null);
+  const [saving, setSaving] = React.useState(false);
   const [draft, setDraft] = React.useState({
     weaponName: "",
     level: 1,
+    ascension: 0,
     constellation: 0,
+    friendshipLevel: 1,
     talentNormal: 1,
     talentSkill: 1,
     talentBurst: 1,
@@ -128,6 +165,13 @@ export default function CharactersPage() {
   const [activeModalChar, setActiveModalChar] = React.useState<OwnedCharacter | null>(null);
   const [modalTab, setModalTab] = React.useState<"overview" | "playstyles">("overview");
   const [selectedPlaystyleId, setSelectedPlaystyleId] = React.useState<string | null>(null);
+
+  React.useEffect(() => {
+    setPortraitError(false);
+    setShowWeaponPicker(false);
+    setSaveMessage(null);
+    setSaveError(null);
+  }, [activeModalChar?.characterId]);
 
   const characterPlaystyles = React.useMemo(
     () => (activeModalChar ? getPlaystylesForCharacter(activeModalChar.characterId) : []),
@@ -168,15 +212,7 @@ export default function CharactersPage() {
 
 
 
-  // Hide the sidebar while either modal is open
-  const anyModalOpen = !!activeModalChar || showAddPanel;
-  React.useEffect(() => {
-    if (!anyModalOpen) return;
-    document.body.dataset.modalOpen = "true";
-    return () => {
-      delete document.body.dataset.modalOpen;
-    };
-  }, [anyModalOpen]);
+  // Keep sidebar visible while modals are open (modals are scoped to lg:left-64)
 
   // Catalog characters that are not owned yet
   const availableToAdd: GameCharacterType[] = [];
@@ -193,10 +229,14 @@ export default function CharactersPage() {
   }
 
   function startEditing(char: OwnedCharacter) {
+    setSaveError(null);
+    setSaveMessage(null);
     setDraft({
       weaponName: char.weaponName ?? "",
       level: char.level,
+      ascension: char.ascension ?? getAscension(char.level),
       constellation: char.constellation,
+      friendshipLevel: char.friendshipLevel ?? 1,
       talentNormal: char.talentNormal,
       talentSkill: char.talentSkill,
       talentBurst: char.talentBurst,
@@ -204,34 +244,164 @@ export default function CharactersPage() {
     setIsEditing(true);
   }
 
-  function saveEdits() {
+  const hasUnsavedChanges = React.useMemo(() => {
+    if (!isEditing || !activeModalChar) return false;
+    return (
+      draft.level !== activeModalChar.level ||
+      draft.ascension !== (activeModalChar.ascension ?? getAscension(activeModalChar.level)) ||
+      draft.constellation !== activeModalChar.constellation ||
+      draft.friendshipLevel !== (activeModalChar.friendshipLevel ?? 1) ||
+      draft.talentNormal !== activeModalChar.talentNormal ||
+      draft.talentSkill !== activeModalChar.talentSkill ||
+      draft.talentBurst !== activeModalChar.talentBurst
+    );
+  }, [isEditing, activeModalChar, draft]);
+
+  async function saveEdits() {
     if (!activeModalChar) return;
     const newLevel = clamp(draft.level, 1, 90);
-    const updated: OwnedCharacter = {
-      ...activeModalChar,
-      weaponName: draft.weaponName.trim(),
-      level: newLevel,
-      ascension: getAscension(newLevel),
-      constellation: clamp(draft.constellation, 0, 6),
-      talentNormal: clamp(draft.talentNormal, 1, 10),
-      talentSkill: clamp(draft.talentSkill, 1, 10),
-      talentBurst: clamp(draft.talentBurst, 1, 10),
-    };
-    const newList: OwnedCharacter[] = [];
-    for (let i = 0; i < characters.length; i++) {
-      if (characters[i].characterId === updated.characterId) {
-        newList.push(updated);
-      } else {
-        newList.push(characters[i]);
-      }
+    const validAscs = getValidAscensionsForLevel(newLevel);
+    const newAscension = validAscs.includes(draft.ascension) ? draft.ascension : validAscs[0];
+    const newConstellation = clamp(draft.constellation, 0, 6);
+    const newFriendship = clamp(draft.friendshipLevel, 1, 10);
+    const newNormal = clamp(draft.talentNormal, 1, 10);
+    const newSkill = clamp(draft.talentSkill, 1, 10);
+    const newBurst = clamp(draft.talentBurst, 1, 10);
+
+    setSaving(true);
+    setSaveError(null);
+    try {
+      await playerCharacterRepo.updateProgression(activeModalChar.characterId, {
+        level: newLevel,
+        ascension: newAscension,
+        constellation: newConstellation,
+        friendshipLevel: newFriendship,
+        talentNormal: newNormal,
+        talentSkill: newSkill,
+        talentBurst: newBurst,
+      });
+
+      const updated: OwnedCharacter = {
+        ...activeModalChar,
+        weaponName: draft.weaponName.trim(),
+        level: newLevel,
+        ascension: newAscension,
+        constellation: newConstellation,
+        friendshipLevel: newFriendship,
+        talentNormal: newNormal,
+        talentSkill: newSkill,
+        talentBurst: newBurst,
+      };
+      setCharacters((prev) =>
+        prev.map((c) => (c.characterId === updated.characterId ? updated : c))
+      );
+      setActiveModalChar(updated);
+      setIsEditing(false);
+      setSaveMessage("Progression saved to local Dexie storage.");
+      setTimeout(() => setSaveMessage(null), 3000);
+    } catch (err) {
+      setSaveError(err instanceof Error ? err.message : "Failed to save character progression.");
+    } finally {
+      setSaving(false);
     }
-    setCharacters(newList);
-    setActiveModalChar(updated);
-    setIsEditing(false);
   }
 
   const [sharedCatalog, setSharedCatalog] = React.useState<GameCharacterType[]>(CANONICAL_CHARACTERS);
   const [catalogSource, setCatalogSource] = React.useState<"firestore" | "cache" | "builtin">("builtin");
+
+  // Merge Dexie persisted character progression into the characters state
+  React.useEffect(() => {
+    if (dexieCharacters.length === 0) return;
+    setCharacters((prev) => {
+      const byId = new Map(prev.map((c) => [c.characterId, c]));
+      for (const dc of dexieCharacters) {
+        const existing = byId.get(dc.characterId);
+        const def =
+          sharedCatalog.find((s) => s.id === dc.characterId) ??
+          CANONICAL_CHARACTERS.find((s) => s.id === dc.characterId);
+        if (existing) {
+          byId.set(dc.characterId, {
+            ...existing,
+            level: dc.level,
+            ascension: dc.ascension,
+            constellation: dc.constellation,
+            friendshipLevel: dc.friendshipLevel,
+            talentNormal: dc.talentNormal,
+            talentSkill: dc.talentSkill,
+            talentBurst: dc.talentBurst,
+          });
+        } else if (def) {
+          byId.set(dc.characterId, {
+            characterId: dc.characterId,
+            name: def.name,
+            title: def.title,
+            element: def.element,
+            weaponType: def.weaponType,
+            rarity: def.rarity,
+            level: dc.level,
+            ascension: dc.ascension,
+            constellation: dc.constellation,
+            friendshipLevel: dc.friendshipLevel,
+            talentNormal: dc.talentNormal,
+            talentSkill: dc.talentSkill,
+            talentBurst: dc.talentBurst,
+            weaponName: "",
+            isTarget: false,
+            acquiredAt: dc.updatedAt,
+          } as unknown as OwnedCharacter);
+        }
+      }
+      return Array.from(byId.values());
+    });
+  }, [dexieCharacters, sharedCatalog]);
+
+  const weaponCatalogMap = React.useMemo(
+    () => new Map(weaponCatalog.map((w) => [w.id, w])),
+    [weaponCatalog]
+  );
+
+  const activeEquippedWeapon = React.useMemo(() => {
+    if (!activeModalChar) return null;
+    const inst = ownedWeapons.find((w) => w.equippedTo === activeModalChar.characterId);
+    if (!inst) return null;
+    return {
+      instance: inst,
+      catalog: weaponCatalogMap.get(inst.weaponId),
+    };
+  }, [activeModalChar, ownedWeapons, weaponCatalogMap]);
+
+  const compatibleOwnedWeapons = React.useMemo(() => {
+    if (!activeModalChar) return [];
+    const q = weaponPickerSearch.trim().toLowerCase();
+    return ownedWeapons
+      .map((inst) => ({ inst, cat: weaponCatalogMap.get(inst.weaponId) }))
+      .filter(({ inst, cat }) => {
+        const typeMatches = !cat || String(cat.weaponType).toLowerCase() === activeModalChar.weaponType.toLowerCase();
+        const nameMatches = !q || (cat?.name ?? inst.name).toLowerCase().includes(q);
+        return typeMatches && nameMatches;
+      });
+  }, [activeModalChar, ownedWeapons, weaponCatalogMap, weaponPickerSearch]);
+
+  const compatibleCatalogOnlyWeapons = React.useMemo(() => {
+    if (!activeModalChar) return [];
+    const ownedWeaponIds = new Set(ownedWeapons.map((w) => w.weaponId));
+    const q = weaponPickerSearch.trim().toLowerCase();
+    return weaponCatalog
+      .filter((w) => {
+        if (ownedWeaponIds.has(w.id)) return false;
+        if (String(w.weaponType).toLowerCase() !== activeModalChar.weaponType.toLowerCase()) return false;
+        if (q && !w.name.toLowerCase().includes(q)) return false;
+        return true;
+      })
+      .slice(0, 12);
+  }, [activeModalChar, ownedWeapons, weaponCatalog, weaponPickerSearch]);
+
+  const charNameById = React.useMemo(() => {
+    const map = new Map<string, string>();
+    for (const c of CANONICAL_CHARACTERS) map.set(c.id, c.name);
+    for (const c of characters) map.set(c.characterId, c.name);
+    return map;
+  }, [characters]);
 
   React.useEffect(() => {
     characterCatalogRepo
@@ -469,10 +639,10 @@ export default function CharactersPage() {
         </div>
       )}
 
-      {/* Character Detail Modal: responsive layout */}
+      {/* Character Detail Modal: responsive layout, keeps sidebar visible */}
       {activeModalChar && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/60 backdrop-blur-sm animate-in fade-in duration-200"
+          className="fixed inset-0 lg:left-64 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 bg-black/65 backdrop-blur-sm animate-in fade-in duration-200"
           onClick={(e) => {
             if (e.target === e.currentTarget) setActiveModalChar(null);
           }}
@@ -481,7 +651,7 @@ export default function CharactersPage() {
             role="dialog"
             aria-modal="true"
             aria-label={`${activeModalChar.name} details`}
-            className="w-full max-w-7xl max-h-[88vh] sm:h-[75vh] flex flex-col rounded-xl sm:rounded-2xl border border-gold-500/40 bg-card shadow-2xl overflow-hidden"
+            className="genshin-modal w-full max-w-7xl max-h-[88vh] sm:h-[75vh] flex flex-col rounded-xl sm:rounded-2xl shadow-2xl overflow-hidden"
           >
             {/* Modal Header */}
             <div className="flex flex-wrap items-center justify-between gap-2.5 px-3 sm:px-5 py-3 border-b border-border/60 bg-muted/20">
@@ -507,7 +677,47 @@ export default function CharactersPage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+                {!isEditing ? (
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => startEditing(activeModalChar)}
+                    className="h-8 px-3 text-xs gap-1.5 border-[#D7B66D]/40 bg-[#1C3154]/80 hover:bg-[#243F6B] text-[#F2D38A]"
+                  >
+                    <Pencil className="w-3.5 h-3.5" />
+                    Edit
+                  </Button>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    {hasUnsavedChanges && (
+                      <Badge variant="outline" className="text-[10px] border-amber-400/50 text-amber-300">
+                        Unsaved
+                      </Badge>
+                    )}
+                    <Button
+                      size="sm"
+                      onClick={saveEdits}
+                      disabled={saving}
+                      className="h-8 px-3 text-xs gap-1 bg-[#D7B66D] text-[#101B35] hover:bg-[#F2D38A] font-semibold"
+                    >
+                      <Save className="w-3.5 h-3.5" />
+                      {saving ? "Saving..." : "Save"}
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setIsEditing(false);
+                        setSaveError(null);
+                      }}
+                      disabled={saving}
+                      className="h-8 px-2.5 text-xs"
+                    >
+                      Cancel
+                    </Button>
+                  </div>
+                )}
                 <div className="flex gap-1 p-0.5 bg-muted/40 rounded-lg border border-border/60">
                   <button
                     onClick={() => setModalTab("overview")}
@@ -526,7 +736,7 @@ export default function CharactersPage() {
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => setActiveModalChar(null)}
+                  onClick={closeModal}
                   aria-label="Close"
                   className="h-8 w-8 p-0"
                 >
@@ -535,10 +745,57 @@ export default function CharactersPage() {
               </div>
             </div>
 
-            {/* Modal Body: sidebar + content */}
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[300px_minmax(0,1fr)] overflow-y-auto lg:overflow-hidden">
-              {/* Sidebar: always-visible character snapshot */}
+            {saveMessage && (
+              <div className="px-5 py-2 bg-emerald-500/15 border-b border-emerald-500/30 text-xs text-emerald-300 flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 shrink-0" />
+                <span>{saveMessage}</span>
+              </div>
+            )}
+            {saveError && (
+              <div className="px-5 py-2 bg-red-500/15 border-b border-red-500/30 text-xs text-red-300 flex items-center gap-2">
+                <AlertTriangle className="w-4 h-4 shrink-0" />
+                <span>{saveError}</span>
+              </div>
+            )}
+
+            {/* Modal Body: portrait + stats sidebar + content */}
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[330px_minmax(0,1fr)] overflow-y-auto lg:overflow-hidden">
+              {/* Sidebar: prominent transparent portrait + character progression snapshot / editor */}
               <aside className="lg:overflow-y-auto p-5 space-y-4 border-b lg:border-b-0 lg:border-r border-border/60 bg-muted/10">
+                {/* Character Portrait Artwork */}
+                {(() => {
+                  const portrait = getCharacterPortrait(activeModalChar.characterId, activeModalChar.name);
+                  return (
+                    <div className="relative rounded-xl border border-[#D7B66D]/35 bg-gradient-to-b from-[#1C3154]/60 via-[#101B35]/80 to-[#0b1426]/90 p-3 flex flex-col items-center justify-center min-h-[220px] overflow-hidden">
+                      {portrait && !portraitError ? (
+                        <>
+                          <img
+                            src={portrait.src}
+                            alt={`${activeModalChar.name} Portrait`}
+                            loading="lazy"
+                            decoding="async"
+                            onError={() => setPortraitError(true)}
+                            className="w-full max-h-[240px] object-contain drop-shadow-[0_6px_16px_rgba(0,0,0,0.55)]"
+                          />
+                          <a
+                            href={portrait.sourceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-1.5 text-[10px] text-muted-foreground/75 hover:text-[#F2D38A] transition-colors"
+                          >
+                            Portrait via Genshin Impact Wiki
+                          </a>
+                        </>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center py-8 gap-2 text-muted-foreground">
+                          <ElementIcon element={activeModalChar.element} size="md" showBg />
+                          <span className="text-xs font-medium">{activeModalChar.name}</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+
                 {/* Badges for small screens (hidden in header) */}
                 <div className="flex sm:hidden items-center gap-2">
                   <Badge variant={activeModalChar.element.toLowerCase() as any}>
@@ -549,74 +806,357 @@ export default function CharactersPage() {
                   </Badge>
                 </div>
 
-                {/* Level */}
+                {/* Level & Ascension */}
                 <div className="p-3 rounded-lg bg-card border border-border/70 space-y-2 text-xs">
                   <div className="flex items-baseline justify-between">
-                    <span className="text-muted-foreground">Level</span>
+                    <span className="text-muted-foreground">Level &amp; Ascension</span>
                     <span className="font-bold text-base">
-                      {activeModalChar.level}
-                      <span className="text-muted-foreground text-xs font-normal"> /90</span>
+                      {isEditing ? draft.level : activeModalChar.level}
+                      <span className="text-muted-foreground text-xs font-normal"> /90 · A{isEditing ? draft.ascension : (activeModalChar.ascension ?? getAscension(activeModalChar.level))}</span>
                     </span>
                   </div>
-                  <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
-                    <div
-                      className="h-full rounded-full bg-gold-500"
-                      style={{ width: `${Math.min(100, (activeModalChar.level / 90) * 100)}%` }}
-                    />
-                  </div>
+                  {isEditing ? (
+                    <div className="space-y-2 pt-1">
+                      <div className="flex items-center gap-2">
+                        <label className="text-[11px] text-muted-foreground w-14">Level</label>
+                        <Input
+                          type="number"
+                          min={1}
+                          max={90}
+                          value={draft.level}
+                          onChange={(e) => {
+                            const lv = clamp(parseInt(e.target.value, 10) || 1, 1, 90);
+                            const validAscs = getValidAscensionsForLevel(lv);
+                            setDraft((d) => ({
+                              ...d,
+                              level: lv,
+                              ascension: validAscs.includes(d.ascension) ? d.ascension : validAscs[0],
+                            }));
+                          }}
+                          className="h-8 text-xs font-mono"
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <span className="text-[11px] text-muted-foreground">Valid Ascension Phase</span>
+                        <div className="grid grid-cols-7 gap-1">
+                          {[0, 1, 2, 3, 4, 5, 6].map((asc) => {
+                            const valid = getValidAscensionsForLevel(draft.level).includes(asc);
+                            return (
+                              <button
+                                key={asc}
+                                type="button"
+                                disabled={!valid}
+                                onClick={() => setDraft((d) => ({ ...d, ascension: asc }))}
+                                className={`h-7 rounded text-[11px] font-mono font-semibold border transition-colors ${
+                                  draft.ascension === asc
+                                    ? "bg-[#D7B66D] text-[#101B35] border-[#F2D38A]"
+                                    : valid
+                                      ? "bg-muted/40 text-foreground border-border hover:border-[#D7B66D]/60"
+                                      : "bg-muted/10 text-muted-foreground/30 border-border/30 cursor-not-allowed"
+                                }`}
+                              >
+                                A{asc}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
+                      <div
+                        className="h-full rounded-full bg-gold-500"
+                        style={{ width: `${Math.min(100, (activeModalChar.level / 90) * 100)}%` }}
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Constellation */}
                 <div className="p-3 rounded-lg bg-card border border-border/70 space-y-2 text-xs">
                   <div className="flex items-baseline justify-between">
                     <span className="text-muted-foreground">Constellation</span>
-                    <span className="font-bold text-base">C{activeModalChar.constellation}</span>
+                    <span className="font-bold text-base">C{isEditing ? draft.constellation : activeModalChar.constellation}</span>
                   </div>
-                  <div className="flex gap-1">
-                    {Array.from({ length: 6 }).map((_, i) => (
-                      <span
-                        key={i}
-                        className={`h-1.5 flex-1 rounded-full ${i < activeModalChar.constellation ? "bg-gold-500" : "bg-muted/60"
+                  {isEditing ? (
+                    <div className="grid grid-cols-7 gap-1 pt-1">
+                      {[0, 1, 2, 3, 4, 5, 6].map((c) => (
+                        <button
+                          key={c}
+                          type="button"
+                          onClick={() => setDraft((d) => ({ ...d, constellation: c }))}
+                          className={`h-7 rounded text-[11px] font-mono font-semibold border transition-colors ${
+                            draft.constellation === c
+                              ? "bg-[#D7B66D] text-[#101B35] border-[#F2D38A]"
+                              : "bg-muted/40 text-foreground border-border hover:border-[#D7B66D]/60"
                           }`}
-                      />
-                    ))}
-                  </div>
+                        >
+                          C{c}
+                        </button>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex gap-1">
+                      {Array.from({ length: 6 }).map((_, i) => (
+                        <span
+                          key={i}
+                          className={`h-1.5 flex-1 rounded-full ${i < activeModalChar.constellation ? "bg-gold-500" : "bg-muted/60"
+                            }`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 {/* Friendship */}
-                <div className="p-3 rounded-lg bg-card border border-border/70 flex items-baseline justify-between text-xs">
-                  <span className="text-muted-foreground">Friendship</span>
-                  <span className="font-bold text-base">Lv. {activeModalChar.friendshipLevel}</span>
+                <div className="p-3 rounded-lg bg-card border border-border/70 space-y-2 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Friendship</span>
+                    <span className="font-bold text-base">Lv. {isEditing ? draft.friendshipLevel : (activeModalChar.friendshipLevel ?? 1)}</span>
+                  </div>
+                  {isEditing && (
+                    <div className="flex items-center gap-2 pt-1">
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="h-7 w-7 p-0"
+                        disabled={draft.friendshipLevel <= 1}
+                        onClick={() => setDraft((d) => ({ ...d, friendshipLevel: clamp(d.friendshipLevel - 1, 1, 10) }))}
+                      >
+                        <Minus className="w-3 h-3" />
+                      </Button>
+                      <Input
+                        type="number"
+                        min={1}
+                        max={10}
+                        value={draft.friendshipLevel}
+                        onChange={(e) =>
+                          setDraft((d) => ({ ...d, friendshipLevel: clamp(parseInt(e.target.value, 10) || 1, 1, 10) }))
+                        }
+                        className="h-7 text-center font-mono text-xs"
+                      />
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        className="h-7 w-7 p-0"
+                        disabled={draft.friendshipLevel >= 10}
+                        onClick={() => setDraft((d) => ({ ...d, friendshipLevel: clamp(d.friendshipLevel + 1, 1, 10) }))}
+                      >
+                        <Plus className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  )}
                 </div>
 
                 {/* Talents */}
                 <div className="p-3 rounded-lg bg-card border border-border/70 space-y-2.5 text-xs">
                   <span className="font-semibold text-foreground">Talent Investment</span>
-                  {talents.map((t) => (
-                    <div key={t.label} className="space-y-1">
-                      <div className="flex items-center justify-between">
-                        <span className="text-muted-foreground">{t.label}</span>
-                        <span className="font-mono font-semibold text-foreground">{t.value}</span>
-                      </div>
-                      <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
-                        <div
-                          className="h-full rounded-full bg-gold-500/80"
-                          style={{ width: `${Math.min(100, (t.value / 10) * 100)}%` }}
-                        />
-                      </div>
+                  {isEditing ? (
+                    <div className="grid grid-cols-3 gap-2 pt-1">
+                      {[
+                        { label: "Normal", key: "talentNormal" as const },
+                        { label: "Skill", key: "talentSkill" as const },
+                        { label: "Burst", key: "talentBurst" as const },
+                      ].map((t) => (
+                        <div key={t.key} className="space-y-1">
+                          <label className="text-[10px] text-muted-foreground block">{t.label}</label>
+                          <Input
+                            type="number"
+                            min={1}
+                            max={10}
+                            value={draft[t.key]}
+                            onChange={(e) =>
+                              setDraft((d) => ({ ...d, [t.key]: clamp(parseInt(e.target.value, 10) || 1, 1, 10) }))
+                            }
+                            className="h-7 text-center font-mono text-xs"
+                          />
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  ) : (
+                    talents.map((t) => (
+                      <div key={t.label} className="space-y-1">
+                        <div className="flex items-center justify-between">
+                          <span className="text-muted-foreground">{t.label}</span>
+                          <span className="font-mono font-semibold text-foreground">{t.value}</span>
+                        </div>
+                        <div className="h-1.5 rounded-full bg-muted/60 overflow-hidden">
+                          <div
+                            className="h-full rounded-full bg-gold-500/80"
+                            style={{ width: `${Math.min(100, (t.value / 10) * 100)}%` }}
+                          />
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </div>
 
-                {/* Equipped build */}
-                <div className="p-3 rounded-lg bg-card border border-border/70 space-y-2 text-xs">
-                  <span className="font-semibold text-foreground">Equipped Build</span>
-                  <div>
-                    <p className="text-muted-foreground">Weapon</p>
-                    <p className="font-medium text-foreground">
-                      {equipped?.equippedWeaponName ?? "Not tracked"}
-                    </p>
+                {/* Equipped Build (Connected to Dexie Owned Weapons & Weapons Catalog) */}
+                <div className="p-3 rounded-lg bg-card border border-border/70 space-y-2.5 text-xs">
+                  <div className="flex items-center justify-between">
+                    <span className="font-semibold text-foreground">Equipped Build</span>
+                    <Button
+                      type="button"
+                      size="sm"
+                      variant="outline"
+                      onClick={() => setShowWeaponPicker((v) => !v)}
+                      className="h-7 px-2 text-[11px] gap-1 border-[#D7B66D]/40 text-[#F2D38A]"
+                    >
+                      <Sword className="w-3 h-3" />
+                      {activeEquippedWeapon ? "Change" : "Equip Weapon"}
+                    </Button>
                   </div>
+
+                  {activeEquippedWeapon ? (
+                    <div className="p-2 rounded-lg bg-muted/30 border border-[#D7B66D]/30 flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2 min-w-0">
+                        {activeEquippedWeapon.catalog?.iconUrl ? (
+                          <img
+                            src={activeEquippedWeapon.catalog.iconUrl}
+                            alt={activeEquippedWeapon.catalog.name}
+                            loading="lazy"
+                            className="w-9 h-9 rounded object-contain bg-muted/50 p-0.5 shrink-0"
+                          />
+                        ) : (
+                          <div className="w-9 h-9 rounded bg-muted/50 flex items-center justify-center shrink-0">
+                            <Sword className="w-4 h-4 text-amber-400" />
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <p className="font-semibold text-foreground truncate">
+                            {activeEquippedWeapon.catalog?.name ?? activeEquippedWeapon.instance.name}
+                          </p>
+                          <p className="text-[11px] text-muted-foreground font-mono">
+                            Lv.{activeEquippedWeapon.instance.level} · R{activeEquippedWeapon.instance.refinement}
+                            {activeEquippedWeapon.catalog?.rarity ? ` · ${activeEquippedWeapon.catalog.rarity}★` : ""}
+                          </p>
+                        </div>
+                      </div>
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="ghost"
+                        onClick={async () => {
+                          await playerWeaponRepo.unequipWeapon(activeEquippedWeapon.instance.id);
+                        }}
+                        className="h-7 px-2 text-[11px] text-red-400 hover:text-red-300 shrink-0"
+                      >
+                        Unequip
+                      </Button>
+                    </div>
+                  ) : (
+                    <p className="text-muted-foreground">
+                      No owned {activeModalChar.weaponType} equipped.
+                    </p>
+                  )}
+
+                  {showWeaponPicker && (
+                    <div className="pt-2 border-t border-border/60 space-y-2.5">
+                      <Input
+                        value={weaponPickerSearch}
+                        onChange={(e) => setWeaponPickerSearch(e.target.value)}
+                        placeholder={`Filter ${activeModalChar.weaponType}s...`}
+                        className="h-7 text-xs"
+                      />
+
+                      <div className="space-y-1.5 max-h-48 overflow-y-auto pr-1">
+                        <p className="text-[10px] uppercase tracking-wider font-semibold text-[#F2D38A]">
+                          Owned {activeModalChar.weaponType}s ({compatibleOwnedWeapons.length})
+                        </p>
+                        {compatibleOwnedWeapons.length === 0 ? (
+                          <p className="text-[11px] text-muted-foreground">
+                            No owned {activeModalChar.weaponType} instances in Dexie yet.{" "}
+                            <Link to="/weapons" className="text-[#F2D38A] hover:underline">
+                              Add on Weapons page
+                            </Link>
+                          </p>
+                        ) : (
+                          compatibleOwnedWeapons.map(({ inst, cat }) => {
+                            const isHere = inst.equippedTo === activeModalChar.characterId;
+                            const otherHolder =
+                              inst.equippedTo && !isHere ? charNameById.get(inst.equippedTo) ?? inst.equippedTo : null;
+                            return (
+                              <div
+                                key={inst.id}
+                                className="p-2 rounded-md border border-border/60 bg-background/50 flex items-center justify-between gap-2"
+                              >
+                                <div className="flex items-center gap-2 min-w-0">
+                                  {cat?.iconUrl ? (
+                                    <img
+                                      src={cat.iconUrl}
+                                      alt={cat.name}
+                                      loading="lazy"
+                                      className="w-7 h-7 rounded object-contain bg-muted/40 shrink-0"
+                                    />
+                                  ) : (
+                                    <Shield className="w-4 h-4 text-muted-foreground shrink-0" />
+                                  )}
+                                  <div className="min-w-0">
+                                    <p className="font-medium text-foreground truncate text-[11px]">
+                                      {cat?.name ?? inst.name}
+                                    </p>
+                                    <p className="text-[10px] text-muted-foreground font-mono truncate">
+                                      Lv.{inst.level} · R{inst.refinement}
+                                      {cat?.baseAtk ? ` · ATK ${cat.baseAtk}` : ""}
+                                      {cat?.secondaryStatType ? ` · ${cat.secondaryStatType}` : ""}
+                                    </p>
+                                    {otherHolder && (
+                                      <p className="text-[10px] text-amber-400 truncate">
+                                        Equipped on {otherHolder}
+                                      </p>
+                                    )}
+                                  </div>
+                                </div>
+                                {isHere ? (
+                                  <Badge variant="gold" className="text-[10px] shrink-0">Equipped</Badge>
+                                ) : (
+                                  <Button
+                                    type="button"
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-6 px-2 text-[10px] shrink-0"
+                                    onClick={async () => {
+                                      await playerWeaponRepo.equipWeapon(inst.id, activeModalChar.characterId);
+                                      setShowWeaponPicker(false);
+                                    }}
+                                  >
+                                    {otherHolder ? "Move Here" : "Equip"}
+                                  </Button>
+                                )}
+                              </div>
+                            );
+                          })
+                        )}
+
+                        {compatibleCatalogOnlyWeapons.length > 0 && (
+                          <div className="pt-2 space-y-1">
+                            <p className="text-[10px] uppercase tracking-wider font-semibold text-muted-foreground">
+                              Catalog Only (Not Owned)
+                            </p>
+                            {compatibleCatalogOnlyWeapons.map((w) => (
+                              <div
+                                key={w.id}
+                                className="p-1.5 rounded border border-border/40 bg-muted/10 flex items-center justify-between gap-2 opacity-70"
+                              >
+                                <span className="text-[11px] truncate">
+                                  {w.name} ({w.rarity}★)
+                                </span>
+                                <Link
+                                  to="/weapons"
+                                  className="text-[10px] text-[#F2D38A] hover:underline shrink-0"
+                                >
+                                  Weapons →
+                                </Link>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+
                   <div>
                     <p className="text-muted-foreground">Artifact Set</p>
                     <p className="font-medium text-foreground">
@@ -891,13 +1431,13 @@ export default function CharactersPage() {
       {showAddPanel && (
 
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          className="fixed inset-0 lg:left-64 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
           onClick={() => setShowAddPanel(false)}
         >
           <div
-            style={{ width: "min(1200px, 100vw)", height: "min(75vh, 100vh)" }}
+            style={{ width: "min(var(--character-modal-width), 100%)", height: "min(82vh, 100%)" }}
 
-            className="cg-wide-modal flex flex-col rounded-2xl bg-card border border-border shadow-2xl overflow-hidden"
+            className="cg-wide-modal genshin-modal flex flex-col rounded-2xl shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-4 border-b border-border flex items-center justify-between gap-3">

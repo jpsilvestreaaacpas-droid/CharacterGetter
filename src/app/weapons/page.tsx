@@ -297,7 +297,7 @@ export default function WeaponsPage() {
             <select
               value={ownershipFilter}
               onChange={(e) => onOwnership(e.target.value as "All" | "Owned" | "Unowned")}
-              className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+              className="h-9 rounded-md border border-input dark:border-[#D7B66D]/25 bg-background dark:bg-[#101B35]/80 dark:text-[#EAEAF0] px-3 text-sm"
             >
               <option value="All">All Ownership</option>
               <option value="Owned">Owned Only</option>
@@ -306,7 +306,7 @@ export default function WeaponsPage() {
             <select
               value={sortBy}
               onChange={(e) => onSort(e.target.value as "rarity" | "name" | "atk")}
-              className="h-9 rounded-md border border-input bg-background px-3 text-sm"
+              className="h-9 rounded-md border border-input dark:border-[#D7B66D]/25 bg-background dark:bg-[#101B35]/80 dark:text-[#EAEAF0] px-3 text-sm"
             >
               <option value="rarity">Sort: Rarity</option>
               <option value="name">Sort: Name</option>
@@ -396,11 +396,11 @@ export default function WeaponsPage() {
       {/* Weapon Detail & Owned Copies Modal */}
       {selectedWeapon && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+          className="fixed inset-0 lg:left-64 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
           onClick={() => setSelectedWeapon(null)}
         >
           <div
-            className="w-full max-w-2xl max-h-[88vh] flex flex-col rounded-2xl bg-card border border-border shadow-2xl overflow-hidden"
+            className="genshin-modal w-full max-w-2xl max-h-[88vh] flex flex-col rounded-2xl shadow-2xl overflow-hidden"
             onClick={(e) => e.stopPropagation()}
           >
             <div className="p-5 border-b border-border flex items-start justify-between gap-4">

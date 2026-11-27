@@ -97,6 +97,7 @@ export interface LocalCharacterProgression {
   characterId: string; // Primary key
   level: number;
   ascension: number;
+  friendshipLevel?: number;
   talentNormal: number;
   talentSkill: number;
   talentBurst: number;

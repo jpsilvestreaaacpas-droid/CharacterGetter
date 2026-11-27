@@ -106,6 +106,7 @@ export function usePlayerCharacters() {
           constellation: c.constellation,
           level: p?.level ?? 1,
           ascension: p?.ascension ?? 0,
+          friendshipLevel: p?.friendshipLevel ?? 1,
           talentNormal: p?.talentNormal ?? 1,
           talentSkill: p?.talentSkill ?? 1,
           talentBurst: p?.talentBurst ?? 1,

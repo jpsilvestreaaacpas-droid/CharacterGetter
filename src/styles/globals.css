@@ -85,35 +85,35 @@
     }
   }
 
-  /* ---------- Night mode: Teyvat Starlit Sky (exact match to screenshot) ---------- */
+  /* ---------- Night mode: Midnight Navy & Celestial Gold (Reference Screenshot) ---------- */
   .dark {
-    --background: 222 47% 7%;
-    --foreground: 220 100% 97%;
+    --background: 222 54% 13%;       /* #101B35 Midnight Navy */
+    --foreground: 240 16% 93%;       /* #EAEAF0 Warm White */
 
-    --card: 223 44% 12%;
-    --card-foreground: 220 100% 97%;
+    --card: 220 51% 18%;             /* #172746 Deep Navy */
+    --card-foreground: 240 16% 93%;  /* #EAEAF0 */
 
-    --popover: 223 44% 11%;
-    --popover-foreground: 220 100% 97%;
+    --popover: 220 51% 16%;
+    --popover-foreground: 240 16% 93%;
 
-    --primary: 43 89% 52%;
-    --primary-foreground: 222 47% 8%;
+    --primary: 41 58% 64%;           /* #D7B66D Muted Gold */
+    --primary-foreground: 222 54% 13%;
 
-    --secondary: 223 38% 18%;
-    --secondary-foreground: 220 60% 90%;
+    --secondary: 218 50% 22%;        /* #1C3154 Panel Blue */
+    --secondary-foreground: 240 16% 93%;
 
-    --muted: 223 35% 16%;
-    --muted-foreground: 220 20% 68%;
+    --muted: 218 46% 20%;
+    --muted-foreground: 217 28% 75%; /* #AEBBD0 Secondary Text */
 
-    --accent: 223 38% 22%;
-    --accent-foreground: 43 90% 65%;
+    --accent: 217 50% 28%;           /* #243F6B Celestial Blue */
+    --accent-foreground: 42 80% 75%; /* #F2D38A Bright Gold */
 
-    --destructive: 349 72% 42%;
+    --destructive: 349 72% 45%;
     --destructive-foreground: 0 0% 98%;
 
-    --border: 223 30% 22%;
-    --input: 223 30% 22%;
-    --ring: 43 89% 52%;
+    --border: 41 44% 55% / 0.28;     /* subtle gold-tinted border */
+    --input: 218 42% 28%;
+    --ring: 42 80% 75%;              /* #F2D38A */
   }
 }
 
@@ -159,18 +159,25 @@
 /* Elegant filigree corner card */
 .genshin-card {
   position: relative;
-  background: rgba(14, 23, 42, 0.82);
+  background: rgba(23, 39, 70, 0.84);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(245, 158, 11, 0.18);
-  border-radius: 1rem;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4), inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid rgba(210, 183, 119, 0.32);
+  border-radius: 0.85rem;
+  box-shadow: 0 6px 24px -4px rgba(4, 9, 22, 0.55), inset 0 0 0 1px rgba(242, 211, 138, 0.06);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
 .genshin-card:hover {
-  border-color: rgba(245, 158, 11, 0.35);
-  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(245, 158, 11, 0.12);
+  border-color: rgba(242, 211, 138, 0.5);
+  box-shadow: 0 10px 30px -6px rgba(4, 9, 22, 0.65), inset 0 0 0 1px rgba(242, 211, 138, 0.14);
+}
+
+/* Deep navy modal surface with refined gold border */
+.genshin-modal {
+  background: linear-gradient(180deg, rgba(23, 39, 70, 0.97) 0%, rgba(16, 27, 53, 0.98) 100%);
+  border: 1px solid rgba(210, 183, 119, 0.42);
+  box-shadow: 0 24px 60px -12px rgba(2, 6, 18, 0.85), inset 0 0 0 1px rgba(242, 211, 138, 0.08);
 }
 
 /* Filigree decorative corners */
